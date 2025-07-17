@@ -1,40 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:bhooklagiapp/app/theme/theme.dart';
 
-class CustomTextField extends StatelessWidget {
+class AppTextField extends StatelessWidget {
   final String hintText;
-  final TextEditingController controller;
-  final bool isPassword;
-  final bool isObscure;
-  final VoidCallback? onToggleVisibility;
+  final TextInputType keyboardType;
+  final ValueChanged<String> onChanged;
+  final TextEditingController? controller;
 
-  const CustomTextField({
-    super.key,
+  const AppTextField({
+    Key? key,
     required this.hintText,
-    required this.controller,
-    this.isPassword = false,
-    this.isObscure = false,
-    this.onToggleVisibility,
-  });
+    required this.keyboardType,
+    required this.onChanged,
+    this.controller,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return TextField(
       controller: controller,
-      obscureText: isPassword ? isObscure : false,
+      keyboardType: keyboardType,
+      onChanged: onChanged,
       decoration: InputDecoration(
         hintText: hintText,
-        suffixIcon: isPassword
-            ? IconButton(
-          icon: Icon(
-            isObscure ? Icons.visibility_off : Icons.visibility,
-            color: Colors.grey,
-          ),
-          onPressed: onToggleVisibility,
-        )
-            : null,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+        filled: true,
+        fillColor: AppColors.white,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(
+            color: AppColors.border,
+          ),
         ),
       ),
     );

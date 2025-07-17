@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:bhooklagiapp/app/theme/theme.dart';
 
+import '../../../routes/app_routes.dart';
+
 class MobileVerificationController extends GetxController {
   var selectedCountryCode = '+92'.obs;
   var phone = ''.obs;
@@ -41,7 +43,16 @@ class MobileVerificationController extends GetxController {
   }
 
   void verifyPhoneNumber() {
-    Get.snackbar('Verification', 'Verifying phone number...');
-    // Add navigation or OTP logic here
+    final fullPhoneNumber = '${selectedCountryCode.value}${phone.value}';
+
+    Get.toNamed(
+      AppRoutes.codeverification,
+      arguments: {
+        'phone': phone.value,
+        'code': selectedCountryCode.value,
+        'full': fullPhoneNumber,
+      },
+    );
   }
+
 }

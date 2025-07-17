@@ -1,5 +1,7 @@
 import 'package:bhooklagiapp/app/theme/theme.dart';
+import 'package:bhooklagiapp/constants/app_assets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import '../../routes/app_routes.dart';
 
@@ -21,12 +23,19 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.primary,
-      body: Center(
-        child: Image.asset(
-          'assets/logos/logo.png',
-          width: 300,
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: const SystemUiOverlayStyle(
+        statusBarColor:AppColors.white, // Your custom purple color
+        statusBarIconBrightness: Brightness.dark, // Makes status bar icons white
+        statusBarBrightness: Brightness.dark, // For iOS
+      ),
+      child: Scaffold(
+        backgroundColor: AppColors.primary,
+        body: Center(
+          child: Image.asset(
+            AppAssets.mainLogo,
+            width: 300,
+          ),
         ),
       ),
     );

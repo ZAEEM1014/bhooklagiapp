@@ -4,4 +4,7 @@ abstract class AppRoutes {
   static const splash = '/';
   static const login = '/login';
   static const mobileverification = '/mobileverification';
+  static const codeverification = '/codeverification';
+  static const emaillogin = '/emaillogin';
+  static const emailpassword = '/emailpassword';
 }

@@ -38,8 +38,9 @@ class LoginController extends GetxController {
   }
 
   void loginWithEmail() {
+    Get.toNamed(AppRoutes.emaillogin);
     // TODO: Navigate to email login screen or show a dialog
-    Get.snackbar("Email Login", "Email login clicked");
+
   }
 
 

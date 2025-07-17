@@ -4,10 +4,11 @@ import 'package:get/get.dart';
 import 'package:bhooklagiapp/constants/app_assets.dart';
 import 'package:bhooklagiapp/app/theme/theme.dart';
 import '../../../../widgets/app_button.dart';
-import '../controllers/mobile_verification_controller.dart';
+import '../controllers/emial_login_controller.dart';
 
-class MobileVerificationScreen extends StatelessWidget {
-  final controller = Get.put(MobileVerificationController());
+
+class EmailLoginScreen extends StatelessWidget {
+  final controller = Get.put(EmailLoginController());
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +33,7 @@ class MobileVerificationScreen extends StatelessWidget {
                       constraints: BoxConstraints(minHeight: constraints.maxHeight),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Align(
                             alignment: Alignment.topLeft,
@@ -41,13 +43,13 @@ class MobileVerificationScreen extends StatelessWidget {
                             ),
                           ),
 
-                          const SizedBox(height: 40),
+                          const SizedBox(height: 0),
 
                           Center(
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(16),
                               child: Image.asset(
-                                AppAssets.mobileVarLogo,
+                                AppAssets.emailVarLogo,
                                 width: 160,
                               ),
                             ),
@@ -57,7 +59,7 @@ class MobileVerificationScreen extends StatelessWidget {
 
                           Center(
                             child: Text(
-                              "What's your mobile number?",
+                              "What's your email?",
                               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                                 fontWeight: FontWeight.bold,
                               ),
@@ -66,9 +68,9 @@ class MobileVerificationScreen extends StatelessWidget {
 
                           const SizedBox(height: 10),
 
-                          Center(
-                            child: const Text(
-                              "We need this to verify and secure your account",
+                          const Center(
+                            child: Text(
+                              "We'll check if you have an account",
                               style: TextStyle(color: Colors.black54),
                               textAlign: TextAlign.center,
                             ),
@@ -76,41 +78,24 @@ class MobileVerificationScreen extends StatelessWidget {
 
                           const SizedBox(height: 20),
 
-                          Obx(() => Row(
-                            children: [
-                              GestureDetector(
-                                onTap: controller.pickCountryCode,
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-                                  decoration: BoxDecoration(
-                                    border: Border.all(color: AppColors.border),
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: Text(controller.selectedCountryCode.value),
+                          TextField(
+                            keyboardType: TextInputType.emailAddress,
+                            onChanged: controller.onEmailChanged,
+                            decoration: InputDecoration(
+                              hintText: 'Email',
+                              filled: true,
+                              fillColor: AppColors.white,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: const BorderSide(
+                                  color: AppColors.border,
                                 ),
                               ),
-                              const SizedBox(width: 10),
-                              Expanded(
-                                child: TextField(
-                                  keyboardType: TextInputType.phone,
-                                  onChanged: controller.onPhoneChanged,
-                                  decoration: InputDecoration(
-                                    hintText: 'Mobile number',
-                                    filled: true,
-                                    fillColor: AppColors.white,
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                      borderSide: const BorderSide(
-                                        color: AppColors.border,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          )),
+                            ),
+                          ),
 
-                          const SizedBox(height: 100), // Leave space for bottom button
+
+                          const SizedBox(height: 100),
                         ],
                       ),
                     ),
@@ -118,13 +103,13 @@ class MobileVerificationScreen extends StatelessWidget {
                 },
               ),
 
-              /// Bottom Button (Sticky + Shadowed)
+              /// Bottom Button
               Positioned(
                 bottom: 0,
                 left: 0,
                 right: 0,
                 child: Obx(() {
-                  final isEnabled = controller.isPhoneValid;
+                  final isEnabled = controller.isEmailValid.value;
                   return SafeArea(
                     top: false,
                     child: Container(
@@ -141,14 +126,13 @@ class MobileVerificationScreen extends StatelessWidget {
                       ),
                       child: AppButton(
                         text: "Continue",
-                        onPressed: isEnabled ? controller.verifyPhoneNumber : null,
+                        onPressed: isEnabled ? controller.verifyEmail : null,
                         isEnabled: isEnabled,
                       ),
                     ),
                   );
                 }),
               ),
-
             ],
           ),
         ),

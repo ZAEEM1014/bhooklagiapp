@@ -1,9 +1,11 @@
 // lib/app/routes/app_pages.dart
+import 'package:bhooklagiapp/app/modules/auth/views/email_login_screen.dart';
+import 'package:bhooklagiapp/app/modules/auth/views/email_password_screen.dart';
 import 'package:bhooklagiapp/app/modules/auth/views/mobile_verification_screen.dart';
 import 'package:get/get.dart';
 
-import '../modules/auth/bindings/login_bindings.dart';
-import '../modules/auth/bindings/mobile_verification_bindings.dart';
+import '../modules/auth/bindings/auth_binding.dart';
+import '../modules/auth/views/code_verification_screen.dart';
 import '../modules/auth/views/login_screen.dart';
 import '../modules/splash/splash_bindings.dart';
 import '../modules/splash/splash_screen.dart';
@@ -25,6 +27,23 @@ class AppPages {
       name: AppRoutes.mobileverification,
       page: () => MobileVerificationScreen(),
       binding: MobileVerificationBinding(),
+    ),
+
+    GetPage(
+      name: AppRoutes.codeverification,
+      page: () => CodeVerificationScreen(),
+      binding:CodeVerificationBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.emaillogin,
+      page: () => EmailLoginScreen(),
+      binding:EmailloginBinding(),
+    ),
+
+    GetPage(
+      name: AppRoutes.emailpassword,
+      page: () => EmailPasswordScreen(),
+      binding:EmailPasswordBinding(),
     ),
   ];
 }
