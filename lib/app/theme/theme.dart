@@ -1,18 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class AppColors {
-  static const primary = Color(0xFF9d02ff);
-  static const primaryLight = Color(0xFFF9B382);
-  static const accentDark = Color(0xFF64241C);
-  static const complement = Color(0xFFACAC4C);
-  static const neutralLight = Color(0xFFCFB4B0);
-  static const textDark = Color(0xFF2D2D2D);
-  static const white = Colors.white;
-  static const black = Colors.black;
-  static const border = Colors.grey;
-  static const hintText = Colors.grey;
-}
+import 'app_colors.dart';
+
+
+
+
+
+
 
 final ThemeData appTheme = ThemeData(
   primaryColor: AppColors.primary,
@@ -71,6 +66,6 @@ final ThemeData appTheme = ThemeData(
       borderRadius: BorderRadius.circular(8),
       borderSide: BorderSide.none,
     ),
-    labelStyle: TextStyle(color: AppColors.textDark),
+    labelStyle: TextStyle(color: AppColors.hintText),
   ),
 );

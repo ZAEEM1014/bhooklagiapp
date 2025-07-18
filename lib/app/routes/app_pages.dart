@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import '../modules/auth/bindings/auth_binding.dart';
 import '../modules/auth/views/code_verification_screen.dart';
 import '../modules/auth/views/login_screen.dart';
+import '../modules/auth/views/reset_password_screen.dart';
 import '../modules/splash/splash_bindings.dart';
 import '../modules/splash/splash_screen.dart';
 import 'app_routes.dart';
@@ -44,6 +45,12 @@ class AppPages {
       name: AppRoutes.emailpassword,
       page: () => EmailPasswordScreen(),
       binding:EmailPasswordBinding(),
+    ),
+
+    GetPage(
+      name: AppRoutes.resetpassword,
+      page: () => ResetPasswordScreen(),
+      binding:ResetPasswordBinding(),
     ),
   ];
 }

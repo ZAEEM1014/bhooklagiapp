@@ -7,4 +7,5 @@ abstract class AppRoutes {
   static const codeverification = '/codeverification';
   static const emaillogin = '/emaillogin';
   static const emailpassword = '/emailpassword';
+  static const resetpassword = '/resetpassword';
 }

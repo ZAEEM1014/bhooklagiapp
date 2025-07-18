@@ -1,4 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:bhooklagiapp/app/theme/theme.dart';
+import '../../../routes/app_routes.dart';
+import '../../../theme/app_colors.dart';
+import '../views/email_password_screen.dart';
 
 class EmailPasswordController extends GetxController {
   late final String email;
@@ -10,7 +15,6 @@ class EmailPasswordController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    // Retrieve the email passed from EmailLoginController
     email = Get.arguments ?? '';
   }
 
@@ -24,16 +28,36 @@ class EmailPasswordController extends GetxController {
   }
 
   void loginWithPassword() {
-    if (isPasswordValid.value) {
-      print("Logging in with password: ${password.value} for email: $email");
-    }
+
+    Get.toNamed(AppRoutes.resetpassword, );
   }
 
-  void sendLoginLink() {
-    print("Sending login link to $email...");
+  void forgotPasswordFlow() {
+    Get.bottomSheet(
+      ForgotPasswordSheet(
+        email: email,
+        onResetSuccess: showSuccessBottomSheet,
+      ),
+      isScrollControlled: true,
+      backgroundColor: AppColors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+    );
   }
 
-  void forgotPassword() {
-    print("Forgot password clicked");
+  void showSuccessBottomSheet() {
+    Future.delayed(const Duration(milliseconds: 300), () {
+      Get.back(); // Close forgot password sheet
+      Get.bottomSheet(
+        SuccessBottomSheet(onResetSuccess: Get.back),
+        isScrollControlled: true,
+        backgroundColor: AppColors.white,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+      );
+    });
   }
+
 }

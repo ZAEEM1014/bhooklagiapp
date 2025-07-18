@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../controllers/code_verification_controller.dart';
 import '../controllers/login_controller.dart';
 import '../controllers/mobile_verification_controller.dart';
+import '../controllers/reset_password_controller.dart';
 
 
 class LoginBinding extends Bindings {
@@ -38,5 +39,12 @@ class EmailPasswordBinding extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut<EmailPasswordController>(() => EmailPasswordController());
+  }
+}
+
+class ResetPasswordBinding extends Bindings {
+  @override
+  void dependencies() {
+    Get.lazyPut<ResetPasswordController>(() => ResetPasswordController());
   }
 }

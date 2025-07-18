@@ -8,6 +8,7 @@ class AppAssets{
   static const String purpleLogo = 'assets/logos/purplelogo.png';
   static const String emailVarLogo = 'assets/logos/emailverification.png';
   static const String mobileVarLogo = 'assets/logos/mobileverification.png';
+  static const String passwordresetLogo = 'assets/logos/passwordreset.png';
 
 
 

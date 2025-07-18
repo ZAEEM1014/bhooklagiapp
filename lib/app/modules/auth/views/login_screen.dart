@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:bhooklagiapp/app/theme/theme.dart';
 import '../../../../widgets/custom_button.dart';
+import '../../../theme/app_colors.dart';
 import '../controllers/login_controller.dart';
 
 
@@ -22,6 +23,7 @@ class LoginScreen extends StatelessWidget {
         statusBarBrightness: Brightness.dark, // For iOS
       ),
       child: Scaffold(
+
         backgroundColor: AppColors.primary,
         body: Stack(
           children: [
@@ -53,7 +55,7 @@ class LoginScreen extends StatelessWidget {
 
                 // ✅ Close button
                 Positioned(
-                  top: 50,
+                  top: 60,
                   left: 16,
                   child: GestureDetector(
                     onTap: controller.closeLogin,

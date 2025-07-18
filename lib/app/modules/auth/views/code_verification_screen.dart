@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import '../../../../widgets/app_button.dart';
+import '../../../theme/app_colors.dart';
 import '../../../theme/theme.dart';
 import '../controllers/code_verification_controller.dart';
 

@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:bhooklagiapp/constants/app_assets.dart';
 import 'package:bhooklagiapp/app/theme/theme.dart';
 import '../../../../widgets/app_button.dart';
+import '../../../theme/app_colors.dart';
 import '../controllers/mobile_verification_controller.dart';
 
 class MobileVerificationScreen extends StatelessWidget {
@@ -18,6 +19,19 @@ class MobileVerificationScreen extends StatelessWidget {
         statusBarBrightness: Brightness.dark,
       ),
       child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.black, size: 28),
+            onPressed: () => Get.back(),
+          ),
+          systemOverlayStyle: const SystemUiOverlayStyle(
+            statusBarColor: AppColors.primary,
+            statusBarIconBrightness: Brightness.light,
+            statusBarBrightness: Brightness.dark,
+          ),
+        ),
         backgroundColor: Colors.white,
         resizeToAvoidBottomInset: true,
         body: SafeArea(
@@ -33,13 +47,7 @@ class MobileVerificationScreen extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Align(
-                            alignment: Alignment.topLeft,
-                            child: IconButton(
-                              icon: const Icon(Icons.arrow_back, size: 30),
-                              onPressed: () => Get.back(),
-                            ),
-                          ),
+
 
                           const SizedBox(height: 40),
 
