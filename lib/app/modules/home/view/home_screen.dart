@@ -1,0 +1,186 @@
+import 'package:bhooklagiapp/widgets/custom_navBar.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+import '../../../../constants/app_assets.dart';
+import '../../../../widgets/controller/restaurant_card_controller.dart';
+import '../../../../widgets/home_sliver_appbar.dart';
+import '../../../../widgets/restaurat_card.dart';
+import '../../../theme/app_colors.dart';
+import '../../../theme/scroll_behavior.dart';
+import '../../restaurant_deatil/view/restaurant_deatil_screen.dart';
+import '../controllers/home_controller.dart';
+
+
+class HomeScreen extends StatelessWidget {
+  final controller = Get.put(HomeController());
+  final restaurantController = Get.put(RestaurantController());
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppColors.primary,
+      body: NestedScrollView(
+        controller: controller.scrollController,
+        physics: const BouncingScrollPhysics(),
+        headerSliverBuilder: (context, innerBoxIsScrolled) {
+          return [
+            /// Sliver AppBar
+            HomeSliverAppBar(controller: controller),
+
+            /// Slogan
+            SliverToBoxAdapter(
+              child: Obx(() {
+                final offset = controller.scrollOffset.value;
+                final fade = (1 - offset / 120).clamp(0.0, 1.0);
+                final translate = (offset * 0.4).clamp(0.0, 60.0);
+
+                return Opacity(
+                  opacity: fade,
+                  child: Transform.translate(
+                    offset: Offset(0, translate),
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 10, 16, 20),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              children: [
+                                Text(
+                                  " Bhook  ",
+                                  style: Theme.of(context).textTheme.displayLarge?.copyWith(
+                                    fontSize: 55,
+                                    color: AppColors.white,
+                                  ),
+                                ),
+                                Text(
+                                  " Lagi Hai ? ",
+                                  style: Theme.of(context).textTheme.displayLarge?.copyWith(
+                                    fontSize: 50,
+                                    color: AppColors.white,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Image.asset(AppAssets.cartoon, height: 120),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              }),
+            ),
+          ];
+        },
+        body: Container(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          child: ListView(
+            physics: const BouncingScrollPhysics(),
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            children: [
+              const SizedBox(height: 20),
+
+              /// Top Options
+
+
+              /// Categories
+              SizedBox(
+                height: 100,
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  physics: const BouncingScrollPhysics(),
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  itemCount: controller.categories.length,
+                  separatorBuilder: (_, __) => const SizedBox(width: 20),
+                  itemBuilder: (_, index) {
+                    final category = controller.categories[index];
+                    return Column(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: Image.asset(
+                            category.imagePath,
+                            width: 50,
+                            height: 50,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        Text(category.name),
+                      ],
+                    );
+                  },
+                ),
+              ),
+
+              Divider(color: AppColors.border.shade400),
+              const SizedBox(height: 16),
+
+
+              /// Filters Bar
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Obx(() => SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: restaurantController.filters.map((filter) {
+                      return Container(
+                        margin: const EdgeInsets.only(right: 12),
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: AppColors.primary),
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        child: Text(
+                          filter,
+                          style: TextStyle(color: AppColors.primary),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                )),
+              ),
+
+              const SizedBox(height: 32),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Text(
+                  'Explore Restaurants',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 28,
+                  ),
+                ),
+
+              ),
+              const SizedBox(height: 10),
+
+              /// Restaurant Cards
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Obx(() => Column(
+                  children: restaurantController.restaurants.map((restaurant) {
+                    return RestaurantCard(
+                      restaurant: restaurant,
+                      onTap: () {
+                        Get.to(() => RestaurantDetailScreen(restaurant: restaurant));
+                      },
+                    );
+
+                  }).toList(),
+                )),
+              ),
+
+              const SizedBox(height: 100),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

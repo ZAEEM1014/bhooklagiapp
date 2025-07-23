@@ -1,13 +1,16 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
-class NoGlowScrollBehavior extends ScrollBehavior {
+class SlowScrollPhysics extends ClampingScrollPhysics {
+  const SlowScrollPhysics({ScrollPhysics? parent}) : super(parent: parent);
+
   @override
-  Widget buildOverscrollIndicator(BuildContext context, Widget child, ScrollableDetails details) {
-    return child; // disables the glow
+  SlowScrollPhysics applyTo(ScrollPhysics? ancestor) {
+    return SlowScrollPhysics(parent: buildParent(ancestor));
   }
 
   @override
-  ScrollPhysics getScrollPhysics(BuildContext context) {
-    return const ClampingScrollPhysics(); // removes iOS bounce
+  double applyPhysicsToUserOffset(ScrollMetrics position, double offset) {
+    // Reduce scroll speed by 60% (you can tune this value)
+    return super.applyPhysicsToUserOffset(position, offset * 0.4);
   }
 }

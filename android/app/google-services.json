@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "451722522919",
+    "project_id": "bhooklagiapp",
+    "storage_bucket": "bhooklagiapp.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:451722522919:android:af342193a351bc20407902",
+        "android_client_info": {
+          "package_name": "com.bhooklagi.customerapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDo-LA2yqBon0ZZu1r5MyrzRjDGUPKJnQI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:451722522919:android:768c57bad55d3b03407902",
+        "android_client_info": {
+          "package_name": "com.example.bhooklagiapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDo-LA2yqBon0ZZu1r5MyrzRjDGUPKJnQI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

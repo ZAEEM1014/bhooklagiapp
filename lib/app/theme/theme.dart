@@ -22,9 +22,9 @@ final ThemeData appTheme = ThemeData(
       fontWeight: FontWeight.bold,
       color: Colors.white, // or your custom AppColors
     ),
-    displayMedium: GoogleFonts.plusJakartaSans(
+    displayMedium: GoogleFonts.russoOne(
       fontSize: 24,
-      fontWeight: FontWeight.w600,
+      fontWeight: FontWeight.bold,
       color: AppColors.textDark,
     ),
     titleLarge: GoogleFonts.poppins(

@@ -261,7 +261,7 @@ class ResetSuccessSheet extends StatelessWidget {
                   ),
                 ),
                 const Center(
-                  child: Icon(Icons.check_circle, color: Colors.green, size: 64),
+                  child: Icon(Icons.check_circle, color: AppColors.primary, size: 64),
                 ),
                 const SizedBox(height: 12),
                 const Center(
@@ -275,7 +275,7 @@ class ResetSuccessSheet extends StatelessWidget {
                 const Center(
                   child: Text(
                     "You can now use your new password to log in.",
-                    style: TextStyle(color: Colors.black54),
+                    style: TextStyle(color: AppColors.textDark),
                     textAlign: TextAlign.center,
                   ),
                 ),

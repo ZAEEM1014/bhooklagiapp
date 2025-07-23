@@ -1,11 +1,21 @@
+import 'package:bhooklagiapp/widgets/controller/nav_bar_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'app/theme/scroll_behavior.dart';
+import 'package:firebase_core/firebase_core.dart';
+
+
+import 'app/modules/auth/controllers/auth_controller.dart';
 import 'app/theme/theme.dart';
 import 'app/routes/app_pages.dart';
 import 'app/routes/app_routes.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
+  Get.put(AuthController());
+  Get.put(BottomNavController());
+
   runApp(const BhookhLagiApp());
 }
 
@@ -15,7 +25,6 @@ class BhookhLagiApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      scrollBehavior: NoGlowScrollBehavior (),
       title: 'Bhookh Lagi',
       debugShowCheckedModeBanner: false,
       theme: appTheme,

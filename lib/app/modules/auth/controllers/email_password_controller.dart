@@ -29,7 +29,7 @@ class EmailPasswordController extends GetxController {
 
   void loginWithPassword() {
 
-    Get.toNamed(AppRoutes.resetpassword, );
+    Get.toNamed(AppRoutes.mainwrapper, );
   }
 
   void forgotPasswordFlow() {

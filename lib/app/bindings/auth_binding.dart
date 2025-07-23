@@ -1,10 +1,10 @@
 import 'package:bhooklagiapp/app/modules/auth/controllers/email_password_controller.dart';
 import 'package:bhooklagiapp/app/modules/auth/controllers/emial_login_controller.dart';
 import 'package:get/get.dart';
-import '../controllers/code_verification_controller.dart';
-import '../controllers/login_controller.dart';
-import '../controllers/mobile_verification_controller.dart';
-import '../controllers/reset_password_controller.dart';
+import '../modules/auth/controllers/code_verification_controller.dart';
+import '../modules/auth/controllers/login_controller.dart';
+import '../modules/auth/controllers/mobile_verification_controller.dart';
+import '../modules/auth/controllers/reset_password_controller.dart';
 
 
 class LoginBinding extends Bindings {

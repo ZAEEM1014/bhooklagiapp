@@ -8,4 +8,6 @@ abstract class AppRoutes {
   static const emaillogin = '/emaillogin';
   static const emailpassword = '/emailpassword';
   static const resetpassword = '/resetpassword';
+  static const home = '/home';
+  static const mainwrapper = '/mainwrapper';
 }
