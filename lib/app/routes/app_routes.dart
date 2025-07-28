@@ -10,4 +10,6 @@ abstract class AppRoutes {
   static const resetpassword = '/resetpassword';
   static const home = '/home';
   static const mainwrapper = '/mainwrapper';
+  static const cart = '/cart';
+
 }

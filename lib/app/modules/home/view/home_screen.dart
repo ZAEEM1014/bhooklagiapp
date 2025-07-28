@@ -11,7 +11,6 @@ import '../../../theme/scroll_behavior.dart';
 import '../../restaurant_deatil/view/restaurant_deatil_screen.dart';
 import '../controllers/home_controller.dart';
 
-
 class HomeScreen extends StatelessWidget {
   final controller = Get.put(HomeController());
   final restaurantController = Get.put(RestaurantController());
@@ -25,10 +24,7 @@ class HomeScreen extends StatelessWidget {
         physics: const BouncingScrollPhysics(),
         headerSliverBuilder: (context, innerBoxIsScrolled) {
           return [
-            /// Sliver AppBar
             HomeSliverAppBar(controller: controller),
-
-            /// Slogan
             SliverToBoxAdapter(
               child: Obx(() {
                 final offset = controller.scrollOffset.value;
@@ -72,81 +68,67 @@ class HomeScreen extends StatelessWidget {
                 );
               }),
             ),
+            SliverPersistentHeader(
+
+              pinned: true,
+              delegate: _StickyHeaderDelegate(
+                child: Container(
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                  ),
+                  padding: const EdgeInsets.only(top: 20, bottom: 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      /// Filter Bar
+
+
+                      /// Categories
+                      SizedBox(
+                        height: 80,
+                        child: ListView.separated(
+                          scrollDirection: Axis.horizontal,
+                          physics: const BouncingScrollPhysics(),
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          itemCount: controller.categories.length,
+                          separatorBuilder: (_, __) => const SizedBox(width: 20),
+                          itemBuilder: (_, index) {
+                            final category = controller.categories[index];
+                            return Column(
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: Image.asset(
+                                    category.imagePath,
+                                    width: 50,
+                                    height: 50,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                const SizedBox(height: 6),
+                                Text(category.name),
+                              ],
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
           ];
         },
         body: Container(
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-          ),
+          color: AppColors.white,
           child: ListView(
             physics: const BouncingScrollPhysics(),
-            padding: const EdgeInsets.symmetric(vertical: 16),
+            padding: const EdgeInsets.symmetric(vertical: 0),
             children: [
-              const SizedBox(height: 20),
-
-              /// Top Options
-
-
-              /// Categories
-              SizedBox(
-                height: 100,
-                child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  physics: const BouncingScrollPhysics(),
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  itemCount: controller.categories.length,
-                  separatorBuilder: (_, __) => const SizedBox(width: 20),
-                  itemBuilder: (_, index) {
-                    final category = controller.categories[index];
-                    return Column(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child: Image.asset(
-                            category.imagePath,
-                            width: 50,
-                            height: 50,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        const SizedBox(height: 6),
-                        Text(category.name),
-                      ],
-                    );
-                  },
-                ),
-              ),
-
               Divider(color: AppColors.border.shade400),
               const SizedBox(height: 16),
 
-
-              /// Filters Bar
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Obx(() => SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: restaurantController.filters.map((filter) {
-                      return Container(
-                        margin: const EdgeInsets.only(right: 12),
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: AppColors.primary),
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        child: Text(
-                          filter,
-                          style: TextStyle(color: AppColors.primary),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                )),
-              ),
-
-              const SizedBox(height: 32),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Text(
@@ -156,7 +138,6 @@ class HomeScreen extends StatelessWidget {
                     fontSize: 28,
                   ),
                 ),
-
               ),
               const SizedBox(height: 10),
 
@@ -171,7 +152,6 @@ class HomeScreen extends StatelessWidget {
                         Get.to(() => RestaurantDetailScreen(restaurant: restaurant));
                       },
                     );
-
                   }).toList(),
                 )),
               ),
@@ -183,4 +163,22 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
+  final Widget child;
+  _StickyHeaderDelegate({required this.child});
+
+  @override
+  double get minExtent => 110;
+  @override
+  double get maxExtent => 110;
+
+  @override
+  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return child;
+  }
+
+  @override
+  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) => true;
 }

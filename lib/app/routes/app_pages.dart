@@ -5,11 +5,13 @@ import 'package:bhooklagiapp/app/modules/auth/views/mobile_verification_screen.d
 import 'package:get/get.dart';
 
 import '../bindings/auth_binding.dart';
+import '../bindings/cart_binding.dart';
 import '../bindings/navbar_binding.dart';
 import '../modules/auth/controllers/auth_controller.dart';
 import '../modules/auth/views/code_verification_screen.dart';
 import '../modules/auth/views/login_screen.dart';
 import '../modules/auth/views/reset_password_screen.dart';
+import '../modules/cart/view/cart_screen.dart';
 import '../modules/home/controllers/home_controller.dart';
 import '../modules/home/view/home_screen.dart';
 import '../modules/main_wrappeer/view/main_wrapper.dart';
@@ -72,6 +74,12 @@ class AppPages {
       name: AppRoutes.resetpassword,
       page: () => ResetPasswordScreen(),
       binding:ResetPasswordBinding(),
+    ),
+
+    GetPage(
+      name: AppRoutes.cart,
+      page: () =>  CartScreen(restaurantId: '',),
+      binding: CartBinding(),
     ),
   ];
 }
