@@ -4,11 +4,15 @@ import '../../../models/restaurant_model.dart';
 import '../../../theme/app_colors.dart';
 import '../../cart/controller/cart_controller.dart';
 import '../../cart/view/cart_screen.dart';
+import '../../favourites/controller/favourite_countroller.dart';
 
 class RestaurantDetailScreen extends StatelessWidget {
   final Restaurant restaurant;
+  final favoriteController = Get.find<FavoriteController>();
 
-   RestaurantDetailScreen({super.key, required this.restaurant});
+
+
+  RestaurantDetailScreen({super.key, required this.restaurant});
   final CartController cartController = Get.find<CartController>();
 
 
@@ -106,7 +110,7 @@ class RestaurantDetailScreen extends StatelessWidget {
         body: CustomScrollView(
           slivers: [
             SliverToBoxAdapter(
-                child: _RestaurantHeader(restaurant: restaurant)),
+                child: _RestaurantHeader(restaurant: restaurant,favoriteController: favoriteController,)),
             // Gradient background behind the sticky search header
             SliverPersistentHeader(
               pinned: true,
@@ -357,8 +361,9 @@ class RestaurantDetailScreen extends StatelessWidget {
 
 class _RestaurantHeader extends StatelessWidget {
   final Restaurant restaurant;
+  final FavoriteController favoriteController;
 
-  const _RestaurantHeader({required this.restaurant});
+  const _RestaurantHeader({required this.restaurant,    required this.favoriteController,});
 
   @override
   Widget build(BuildContext context) {
@@ -370,15 +375,53 @@ class _RestaurantHeader extends StatelessWidget {
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              Icon(Icons.arrow_back, size: 24),
+            children: [
+              IconButton(
+                icon: const Icon(Icons.arrow_back, size: 24),
+                onPressed: () {
+                  Get.back();
+                },
+              ),
+
               Row(
                 children: [
-                  Icon(Icons.info_outline, size: 20),
-                  SizedBox(width: 12),
-                  Icon(Icons.favorite_border, size: 20),
-                  SizedBox(width: 12),
-                  Icon(Icons.share, size: 20),
+                  const Icon(Icons.info_outline, size: 20),
+                  const SizedBox(width: 5),
+
+
+
+
+                  Obx(() {
+                    final isFav = favoriteController.isFavorite(restaurant.id );
+                    return TweenAnimationBuilder<Color?>(
+                      tween: ColorTween(
+                        begin: isFav ? AppColors.black: AppColors.primary,
+                        end: isFav ? AppColors.primary : AppColors.black,
+                      ),
+                      duration: const Duration(milliseconds: 300),
+                      builder: (context, color, child) {
+                        return IconButton(
+                          icon: Icon(
+                            isFav ? Icons.favorite : Icons.favorite_border,
+                            color: color,
+                            size: 24,
+                          ),
+                          onPressed: () {
+                            favoriteController.toggleFavorite(restaurant.id );
+                          },
+                        );
+                      },
+                    );
+                  }),
+
+
+
+
+
+
+
+                  const SizedBox(width: 5),
+                  const Icon(Icons.share, size: 20),
                 ],
               ),
             ],

@@ -12,6 +12,8 @@ class HomeSliverAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cartController = Get.find<CartController>();
+
     return SliverAppBar(
       backgroundColor: AppColors.primary,
       floating: true,
@@ -36,49 +38,45 @@ class HomeSliverAppBar extends StatelessWidget {
         IconButton(
           icon: const Icon(Icons.favorite_border, color: Colors.white),
           onPressed: () {
-            Get.snackbar("Favorites", "Opening favorites...");
+            Get.toNamed(AppRoutes.favorite);
           },
         ),
-        GetBuilder<CartController>(
-          builder: (cartController) {
-            return Stack(
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.shopping_bag_outlined, color: Colors.white),
-                  onPressed: () {
-                    Get.toNamed(AppRoutes.cart);
-                  },
-                ),
-                Obx(() {
-                  final count = cartController.totalItems.value;
-                  if (count == 0) return const SizedBox.shrink();
-                  return Positioned(
-                    right: 4,
-                    top: 4,
-                    child: Container(
-                      padding: const EdgeInsets.all(4),
-                      decoration: const BoxDecoration(
-                        color: AppColors.primary,
-                        shape: BoxShape.circle,
-                      ),
-                      constraints: const BoxConstraints(minWidth: 18, minHeight: 18),
-                      child: Text(
-                        '$count',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  );
-                }),
-              ],
-            );
-          },
-        ),
+        Obx(() {
+          final count = cartController.totalItems.value;
 
+          return Stack(
+            children: [
+              IconButton(
+                icon: const Icon(Icons.shopping_bag_outlined, color: Colors.white),
+                onPressed: () {
+                  Get.toNamed(AppRoutes.cart);
+                },
+              ),
+              if (count > 0)
+                Positioned(
+                  right: 4,
+                  top: 4,
+                  child: Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: const BoxDecoration(
+                      color: Colors.red,
+                      shape: BoxShape.circle,
+                    ),
+                    constraints: const BoxConstraints(minWidth: 18, minHeight: 18),
+                    child: Text(
+                      '$count',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+            ],
+          );
+        }),
         const SizedBox(width: 10),
       ],
       bottom: PreferredSize(

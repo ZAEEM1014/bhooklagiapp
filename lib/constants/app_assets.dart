@@ -11,6 +11,7 @@ class AppAssets{
   static const String passwordresetLogo = 'assets/logos/passwordreset.png';
   static const String cartoon = 'assets/logos/cartoon.png';
   static const String unavailable = 'assets/logos/unavailable.png';
+  static const String favorite = 'assets/logos/favorite.png';
 
 
 

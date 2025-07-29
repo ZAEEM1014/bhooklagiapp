@@ -11,5 +11,8 @@ abstract class AppRoutes {
   static const home = '/home';
   static const mainwrapper = '/mainwrapper';
   static const cart = '/cart';
+  static const favorite = '/favorite';
+  static const grocery = '/grocery';
+  static const restaurantdetail = '/restaurantdetail ';
 
 }

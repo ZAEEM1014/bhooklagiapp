@@ -4,6 +4,9 @@ import '../../constants/app_assets.dart';
 
 
 class RestaurantController extends GetxController {
+
+  // Stores favorite status keyed by restaurant name or ID
+
   /// List of available filters
   final filters = <String>[
     "All",

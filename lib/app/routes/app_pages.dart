@@ -2,16 +2,23 @@
 import 'package:bhooklagiapp/app/modules/auth/views/email_login_screen.dart';
 import 'package:bhooklagiapp/app/modules/auth/views/email_password_screen.dart';
 import 'package:bhooklagiapp/app/modules/auth/views/mobile_verification_screen.dart';
+import 'package:bhooklagiapp/app/modules/restaurant_deatil/view/restaurant_deatil_screen.dart';
 import 'package:get/get.dart';
 
 import '../bindings/auth_binding.dart';
 import '../bindings/cart_binding.dart';
+import '../bindings/favorite_binding.dart';
+import '../bindings/grocery_binding.dart';
 import '../bindings/navbar_binding.dart';
+import '../bindings/restaurant_detai_binding.dart';
+import '../models/restaurant_model.dart';
 import '../modules/auth/controllers/auth_controller.dart';
 import '../modules/auth/views/code_verification_screen.dart';
 import '../modules/auth/views/login_screen.dart';
 import '../modules/auth/views/reset_password_screen.dart';
 import '../modules/cart/view/cart_screen.dart';
+import '../modules/favourites/view/favourite_screen.dart' hide CartScreen;
+import '../modules/grocery/view/grosery_screen.dart';
 import '../modules/home/controllers/home_controller.dart';
 import '../modules/home/view/home_screen.dart';
 import '../modules/main_wrappeer/view/main_wrapper.dart';
@@ -71,6 +78,17 @@ class AppPages {
     ),
 
     GetPage(
+      name: AppRoutes.restaurantdetail,
+      page: () {
+        final restaurant = Get.arguments as Restaurant;
+        return RestaurantDetailScreen(restaurant: restaurant);
+      },
+      binding: RestaurantDetailBinding(),
+    ),
+
+
+
+    GetPage(
       name: AppRoutes.resetpassword,
       page: () => ResetPasswordScreen(),
       binding:ResetPasswordBinding(),
@@ -80,6 +98,18 @@ class AppPages {
       name: AppRoutes.cart,
       page: () =>  CartScreen(restaurantId: '',),
       binding: CartBinding(),
+    ),
+
+    GetPage(
+      name: AppRoutes.favorite,
+      page: () =>  FavouriteScreen(), // Replace if you use another screen
+      binding: FavouritesBinding(),
+    ),
+
+    GetPage(
+      name: AppRoutes.grocery,
+      page: () => GroceryScreen(),
+      binding: GroceryBinding(),
     ),
   ];
 }

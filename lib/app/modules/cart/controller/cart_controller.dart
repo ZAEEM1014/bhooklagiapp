@@ -1,18 +1,24 @@
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
-
+import 'package:get/get.dart';
 import '../../../models/restaurant_model.dart';
 
 class CartController extends GetxController {
-  final RxMap<String, Map<Product, int>> restaurantCarts = <String, Map<Product, int>>{}.obs;
-  final RxInt totalItems = 0.obs; // NEW
+  /// Map of restaurantId -> (Product -> Quantity)
+  final RxMap<String, Map<Product, int>> restaurantCarts =
+      <String, Map<Product, int>>{}.obs;
+
+  /// Total item count (for badge, summary, etc.)
+  final RxInt totalItems = 0.obs;
+
+  /// Currently selected restaurant
   String? currentRestaurantId;
 
+  /// Get current restaurant cart
   Map<Product, int> get currentCart {
     if (currentRestaurantId == null) return {};
     return restaurantCarts.putIfAbsent(currentRestaurantId!, () => {});
   }
 
+  /// Add or update product quantity in current cart
   void addToCart(Product product, int qty) {
     final cart = currentCart;
     if (cart.containsKey(product)) {
@@ -23,6 +29,7 @@ class CartController extends GetxController {
     updateCartTotals();
   }
 
+  /// Increase quantity of a product
   void increaseQty(Product product) {
     if (currentCart.containsKey(product)) {
       currentCart[product] = currentCart[product]! + 1;
@@ -30,6 +37,7 @@ class CartController extends GetxController {
     }
   }
 
+  /// Decrease quantity (min 1)
   void decreaseQty(Product product) {
     if (currentCart.containsKey(product) && currentCart[product]! > 1) {
       currentCart[product] = currentCart[product]! - 1;
@@ -37,25 +45,31 @@ class CartController extends GetxController {
     }
   }
 
+  /// Remove product from cart
   void removeItem(Product product) {
     currentCart.remove(product);
     updateCartTotals();
   }
 
+  /// Alias for removeItem() to match UI tap handler
+  void removeFromCart(Product product) => removeItem(product);
+
+  /// Compute total price of cart
   double get totalPrice {
     return currentCart.entries
         .map((e) => e.key.price * e.value)
         .fold(0.0, (prev, curr) => prev + curr);
   }
 
+  /// Recalculate totalItems and refresh observable
   void updateCartTotals() {
-    restaurantCarts.refresh(); // ensure GetX picks up changes
+    restaurantCarts.refresh(); // ensure GetX picks up internal changes
     totalItems.value = currentCart.values.fold(0, (sum, qty) => sum + qty);
   }
 
   @override
   void onInit() {
     super.onInit();
-    updateCartTotals(); // Initialize correctly at app start
+    updateCartTotals(); // initialize item count
   }
 }

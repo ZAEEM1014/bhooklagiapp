@@ -13,7 +13,7 @@ class BottomNavController extends GetxController {
   var selectedIndex = 0.obs;
 
   final pages = [
-     HomeScreen(),
+    HomeScreen(),
     GroceryScreen(),
     SearchScreen(),
     ProfileScreen(),
@@ -24,3 +24,5 @@ class BottomNavController extends GetxController {
     selectedIndex.value = index;
   }
 }
+
+

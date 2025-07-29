@@ -4,10 +4,11 @@ import '../../../theme/app_colors.dart';
 import '../controller/cart_controller.dart';
 
 class CartScreen extends StatelessWidget {
-  final CartController controller = Get.find<CartController>();
+  final CartController controller = Get.put(CartController());
 
-
-  CartScreen({super.key, required String restaurantId});
+  CartScreen({super.key, required String restaurantId}) {
+    controller.currentRestaurantId = restaurantId;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,46 +35,74 @@ class CartScreen extends StatelessWidget {
               final product = entry.key;
               final qty = entry.value;
 
-              return Container(
-                margin: const EdgeInsets.only(bottom: 16),
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Row(
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: Image.asset(product.image, width: 60, height: 60, fit: BoxFit.cover),
+              return Stack(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 16),
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(product.name, style: const TextStyle(fontWeight: FontWeight.w600)),
-                          const SizedBox(height: 4),
-                          Text(product.description, style: const TextStyle(color: Colors.grey, fontSize: 12)),
-                          const SizedBox(height: 8),
-                          Row(
+                    child: Row(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Image.asset(
+                            product.image,
+                            width: 60,
+                            height: 60,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              _qtyButton(Icons.remove, () => controller.decreaseQty(product)),
-                              const SizedBox(width: 8),
-                              Text('$qty', style: const TextStyle(fontSize: 16)),
-                              const SizedBox(width: 8),
-                              _qtyButton(Icons.add, () => controller.increaseQty(product)),
-                              const Spacer(),
-                              Text("Rs. ${(product.price * qty).toStringAsFixed(2)}",
+                              Text(product.name,
                                   style: const TextStyle(fontWeight: FontWeight.w600)),
+                              const SizedBox(height: 4),
+                              Text(
+                                product.description,
+                                style: const TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 12,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              Row(
+                                children: [
+                                  _qtyButton(Icons.remove, () => controller.decreaseQty(product)),
+                                  const SizedBox(width: 8),
+                                  Text('$qty', style: const TextStyle(fontSize: 16)),
+                                  const SizedBox(width: 8),
+                                  _qtyButton(Icons.add, () => controller.increaseQty(product)),
+                                  const Spacer(),
+                                  Text(
+                                    "Rs. ${(product.price * qty).toStringAsFixed(2)}",
+                                    style: const TextStyle(fontWeight: FontWeight.w600),
+                                  ),
+                                ],
+                              ),
                             ],
-                          )
-                        ],
-                      ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                  // ❌ Remove button in top-right corner
+                  Positioned(
+                    right: 8,
+                    top: 8,
+                    child: GestureDetector(
+                      onTap: () => controller.removeFromCart(product),
+                      child: const Icon(Icons.close, size: 20, color: Colors.grey),
+                    ),
+                  ),
+                ],
               );
+
             }),
             const SizedBox(height: 100),
           ],
@@ -89,35 +118,56 @@ class CartScreen extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           decoration: const BoxDecoration(
             color: Colors.white,
-            boxShadow: [BoxShadow(blurRadius: 8, color: AppColors.black)],
+            boxShadow: [
+              BoxShadow(
+                blurRadius: 8,
+                color: AppColors.black,
+              )
+            ],
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                const Text("Subtotal", style: TextStyle(fontSize: 14)),
-                Text("Rs. ${subtotal.toStringAsFixed(2)}"),
-              ]),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text("Subtotal", style: TextStyle(fontSize: 14)),
+                  Text("Rs. ${subtotal.toStringAsFixed(2)}"),
+                ],
+              ),
               const SizedBox(height: 4),
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: const [
-                Text("Delivery Fee", style: TextStyle(fontSize: 14)),
-                Text("Rs. 99.00"),
-              ]),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: const [
+                  Text("Delivery Fee", style: TextStyle(fontSize: 14)),
+                  Text("Rs. 99.00"),
+                ],
+              ),
               const SizedBox(height: 4),
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: const [
-                Text("Taxes", style: TextStyle(fontSize: 14)),
-                Text("Rs. 14.99"),
-              ]),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: const [
+                  Text("Taxes", style: TextStyle(fontSize: 14)),
+                  Text("Rs. 14.99"),
+                ],
+              ),
               const Divider(height: 20),
               ElevatedButton(
                 onPressed: () {},
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,
                   minimumSize: const Size(double.infinity, 48),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                 ),
-                child: Text("Pay Rs. ${total.toStringAsFixed(2)}",
-                    style: const TextStyle(fontSize: 16, color: AppColors.white)),
+                child: Text(
+                  "Pay Rs. ${total.toStringAsFixed(2)}",
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: AppColors.white,
+                  ),
+                ),
               ),
             ],
           ),
