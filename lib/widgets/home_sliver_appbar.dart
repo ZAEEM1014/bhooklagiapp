@@ -48,11 +48,10 @@ class HomeSliverAppBar extends StatelessWidget {
               IconButton(
                 icon: const Icon(Icons.shopping_bag_outlined, color: AppColors.white),
                 onPressed: () {
-                  final restaurantId = cartController.currentRestaurantId ?? '';
-                  Get.toNamed(
-                    AppRoutes.cart,
-                    arguments: {'restaurantId': restaurantId},
-                  );
+                  Get.toNamed(AppRoutes.cart, arguments: {
+                    'restaurantId': cartController.currentRestaurantId ?? '',
+                  });
+
                 },
               ),
               if (count > 0)

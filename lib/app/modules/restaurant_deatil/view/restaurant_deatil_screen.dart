@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../models/restaurant_model.dart';
-import '../../../routes/app_routes.dart';
 import '../../../theme/app_colors.dart';
 import '../../cart/controller/cart_controller.dart';
 import '../../cart/view/cart_screen.dart';
@@ -45,13 +44,11 @@ class RestaurantDetailScreen extends StatelessWidget {
           ),
           child: ElevatedButton(
             onPressed: () {
-              Get.toNamed(AppRoutes.cart, arguments: {
-                'restaurantId': restaurant.id,
-              });
+              Get.to(() => CartScreen(restaurantId: restaurant.id));
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primary,
-              minimumSize: const Size(double.infinity, 50),
+              minimumSize: const Size(double.infinity, 55),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),

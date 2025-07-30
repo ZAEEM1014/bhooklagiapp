@@ -99,16 +99,11 @@ class AppPages {
     GetPage(
       name: AppRoutes.cart,
       page: () {
-        final args = Get.arguments;
-        final restaurantId = args is String
-            ? args
-            : (args is Map<String, dynamic> ? args['restaurantId'] ?? '' : '');
-        return CartScreen(restaurantId: restaurantId);
+        final restaurantId = Get.arguments as String?;
+        return CartScreen(restaurantId: restaurantId ?? '');
       },
       binding: CartBinding(),
     ),
-
-
 
 
     GetPage(

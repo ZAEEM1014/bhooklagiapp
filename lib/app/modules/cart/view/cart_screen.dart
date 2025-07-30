@@ -5,20 +5,25 @@ import '../../../theme/app_colors.dart';
 import '../controller/cart_controller.dart';
 
 class CartScreen extends StatelessWidget {
-  final CartController controller = Get.put(CartController());
-  final String restaurantId;
+  final CartController controller = Get.find<CartController>();
+  final String restaurantName;
 
-  CartScreen({Key? key, required this.restaurantId}) : super(key: key) {
-    controller.setCurrentRestaurant(restaurantId);
+  CartScreen({super.key, required String restaurantId})
+      : restaurantName = (Get.arguments as Map<String, dynamic>?)?['restaurantName'] ?? '' {
+    final args = Get.arguments as Map<String, dynamic>?;
+    final restaurantId = args?['restaurantId'] as String?;
+    if (restaurantId != null) {
+      controller.setCurrentRestaurant(restaurantId);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Colors.grey.shade100,
       appBar: CustomAppBar(
         title: 'Your Cart',
-        subtitle: controller.currentRestaurant?.name,
+        subtitle: restaurantName,
       ),
       body: Obx(() {
         final items = controller.currentCart;
@@ -79,7 +84,7 @@ class CartScreen extends StatelessWidget {
                                   _qtyButton(Icons.add, () => controller.increaseQty(product)),
                                   const Spacer(),
                                   Text(
-                                    "Rs. ${(product.price * qty).toStringAsFixed(2)}",
+                                    "Rs. ${(product.price * qty).toStringAsFixed(0)}",
                                     style: const TextStyle(fontWeight: FontWeight.w600),
                                   ),
                                 ],
@@ -105,30 +110,51 @@ class CartScreen extends StatelessWidget {
           ],
         );
       }),
-      bottomNavigationBar: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              blurRadius: 8,
-              color: Color(0x22000000),
-            ),
-          ],
-        ),
-        child: ElevatedButton(
-          onPressed: controller.goToCheckout,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.primary,
-            minimumSize: const Size(double.infinity, 48),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      bottomNavigationBar: Obx(() {
+        if (controller.currentCart.isEmpty) return const SizedBox.shrink();
+
+        return Container(
+          padding: const EdgeInsets.all(16),
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                blurRadius: 8,
+                color: Color(0x22000000),
+              ),
+            ],
           ),
-          child: const Text(
-            "Checkout",
-            style: TextStyle(fontSize: 16, color: Colors.white),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text("Total:",
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  Text(
+                    "Rs. ${controller.totalPrice.toStringAsFixed(0)}",
+                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              ElevatedButton(
+                onPressed: controller.goToCheckout,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primary,
+                  minimumSize: const Size(double.infinity, 48),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                ),
+                child: const Text(
+                  "Checkout",
+                  style: TextStyle(fontSize: 16, color: Colors.white),
+                ),
+              ),
+            ],
           ),
-        ),
-      ),
+        );
+      }),
     );
   }
 
