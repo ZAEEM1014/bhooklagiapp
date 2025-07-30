@@ -14,5 +14,6 @@ abstract class AppRoutes {
   static const favorite = '/favorite';
   static const grocery = '/grocery';
   static const restaurantdetail = '/restaurantdetail ';
+  static const checkout = '/checkout';
 
 }

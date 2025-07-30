@@ -10,7 +10,6 @@ class Restaurant {
   final bool isAd;
   final bool freeDelivery;
 
-
   final List<Offer> offers;
   final List<Section> sections;
 

@@ -1,25 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../../widgets/app_bar_normal.dart';
 import '../../../theme/app_colors.dart';
 import '../controller/cart_controller.dart';
 
 class CartScreen extends StatelessWidget {
   final CartController controller = Get.put(CartController());
+  final String restaurantId;
 
-  CartScreen({super.key, required String restaurantId}) {
-    controller.currentRestaurantId = restaurantId;
+  CartScreen({Key? key, required this.restaurantId}) : super(key: key) {
+    controller.setCurrentRestaurant(restaurantId);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade100,
-      appBar: AppBar(
-        title: const Text('Your Cart'),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
-        elevation: 1,
+      backgroundColor: AppColors.background,
+      appBar: CustomAppBar(
+        title: 'Your Cart',
+        subtitle: controller.currentRestaurant?.name,
       ),
       body: Obx(() {
         final items = controller.currentCart;
@@ -91,7 +90,6 @@ class CartScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  // ❌ Remove button in top-right corner
                   Positioned(
                     right: 8,
                     top: 8,
@@ -102,77 +100,35 @@ class CartScreen extends StatelessWidget {
                   ),
                 ],
               );
-
             }),
             const SizedBox(height: 100),
           ],
         );
       }),
-      bottomNavigationBar: Obx(() {
-        final subtotal = controller.totalPrice;
-        const delivery = 99.0;
-        const tax = 14.99;
-        final total = subtotal + delivery + tax;
-
-        return Container(
-          padding: const EdgeInsets.all(16),
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                blurRadius: 8,
-                color: AppColors.black,
-              )
-            ],
+      bottomNavigationBar: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              blurRadius: 8,
+              color: Color(0x22000000),
+            ),
+          ],
+        ),
+        child: ElevatedButton(
+          onPressed: controller.goToCheckout,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.primary,
+            minimumSize: const Size(double.infinity, 48),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text("Subtotal", style: TextStyle(fontSize: 14)),
-                  Text("Rs. ${subtotal.toStringAsFixed(2)}"),
-                ],
-              ),
-              const SizedBox(height: 4),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
-                  Text("Delivery Fee", style: TextStyle(fontSize: 14)),
-                  Text("Rs. 99.00"),
-                ],
-              ),
-              const SizedBox(height: 4),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
-                  Text("Taxes", style: TextStyle(fontSize: 14)),
-                  Text("Rs. 14.99"),
-                ],
-              ),
-              const Divider(height: 20),
-              ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  minimumSize: const Size(double.infinity, 48),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-                child: Text(
-                  "Pay Rs. ${total.toStringAsFixed(2)}",
-                  style: const TextStyle(
-                    fontSize: 16,
-                    color: AppColors.white,
-                  ),
-                ),
-              ),
-            ],
+          child: const Text(
+            "Checkout",
+            style: TextStyle(fontSize: 16, color: Colors.white),
           ),
-        );
-      }),
+        ),
+      ),
     );
   }
 

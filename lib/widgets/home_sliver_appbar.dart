@@ -23,7 +23,7 @@ class HomeSliverAppBar extends StatelessWidget {
       automaticallyImplyLeading: false,
       title: Row(
         children: [
-          const Icon(Icons.location_on, color: Colors.white),
+          const Icon(Icons.location_on, color: AppColors.white),
           const SizedBox(width: 5),
           Obx(() => Text(
             controller.location.value,
@@ -36,20 +36,23 @@ class HomeSliverAppBar extends StatelessWidget {
       ),
       actions: [
         IconButton(
-          icon: const Icon(Icons.favorite_border, color: Colors.white),
+          icon: const Icon(Icons.favorite_border, color: AppColors.white),
           onPressed: () {
             Get.toNamed(AppRoutes.favorite);
           },
         ),
         Obx(() {
           final count = cartController.totalItems.value;
-
           return Stack(
             children: [
               IconButton(
-                icon: const Icon(Icons.shopping_bag_outlined, color: Colors.white),
+                icon: const Icon(Icons.shopping_bag_outlined, color: AppColors.white),
                 onPressed: () {
-                  Get.toNamed(AppRoutes.cart);
+                  final restaurantId = cartController.currentRestaurantId ?? '';
+                  Get.toNamed(
+                    AppRoutes.cart,
+                    arguments: {'restaurantId': restaurantId},
+                  );
                 },
               ),
               if (count > 0)
@@ -89,7 +92,7 @@ class HomeSliverAppBar extends StatelessWidget {
                 hintText: "Search for restaurants and groceries",
                 prefixIcon: const Icon(Icons.search),
                 filled: true,
-                fillColor: Colors.white,
+                fillColor: AppColors.white,
                 contentPadding: const EdgeInsets.all(12),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),

@@ -2,12 +2,8 @@ import 'package:get/get.dart';
 import '../../app/models/restaurant_model.dart';
 import '../../constants/app_assets.dart';
 
-
 class RestaurantController extends GetxController {
-
-  // Stores favorite status keyed by restaurant name or ID
-
-  /// List of available filters
+  /// List of filters for UI
   final filters = <String>[
     "All",
     "Fast Delivery",
@@ -16,11 +12,12 @@ class RestaurantController extends GetxController {
     "Offers",
   ].obs;
 
-  /// List of restaurants
+  /// List of all available restaurants
   final restaurants = <Restaurant>[
     Restaurant(
+      id: 'spice_hub',
       name: "Spice Hub",
-      image: AppAssets.burger, // Cover Image
+      image: AppAssets.burger,
       rating: 4.3,
       reviews: 120,
       category: "Biryani, Curry",
@@ -97,14 +94,11 @@ class RestaurantController extends GetxController {
             Product(name: "Cold Coffee", image: AppAssets.burger, price: 200, description: "Iced coffee with whipped topping."),
           ],
         ),
-      ], id: 'spice_hub',
+      ],
     ),
 
-
-
-
-
     Restaurant(
+      id: 'burger_fix',
       name: "Burger Fix",
       image: AppAssets.burger,
       rating: 4.6,
@@ -117,39 +111,25 @@ class RestaurantController extends GetxController {
       offers: [
         Offer(title: "Free Drink", description: "With any burger"),
       ],
-
       sections: [
         Section(
           title: "Classic Burgers",
           products: [
-            Product(
-              name: "Zinger Burger",
-              image: AppAssets.burger,
-              price: 399,
-              description: "Crispy chicken fillet with lettuce, mayo, and bun.",
-            ),
-            Product(
-              name: "Beef Burger",
-              image: AppAssets.burger,
-              price: 449,
-              description: "Juicy beef patty with cheese, onions, and sauces.",
-            ),
+            Product(name: "Zinger Burger", image: AppAssets.burger, price: 399, description: "Crispy chicken fillet with lettuce, mayo, and bun."),
+            Product(name: "Beef Burger", image: AppAssets.burger, price: 449, description: "Juicy beef patty with cheese, onions, and sauces."),
           ],
         ),
         Section(
           title: "Loaded Fries",
           products: [
-            Product(
-              name: "Cheesy Fries",
-              image: AppAssets.fries,
-              price: 249,
-              description: "Crispy fries topped with melted cheddar cheese.",
-            ),
+            Product(name: "Cheesy Fries", image: AppAssets.fries, price: 249, description: "Crispy fries topped with melted cheddar cheese."),
           ],
         ),
-      ], id: 'burger_fix',
+      ],
     ),
+
     Restaurant(
+      id: 'pizza_mania',
       name: "Pizza Mania",
       image: AppAssets.pizza,
       rating: 4.2,
@@ -162,38 +142,30 @@ class RestaurantController extends GetxController {
       offers: [
         Offer(title: "Buy 1 Get 1", description: "On medium size pizzas"),
       ],
-
       sections: [
         Section(
           title: "Medium Pizzas",
           products: [
-            Product(
-              name: "Pepperoni Pizza",
-              image: AppAssets.pizza,
-              price: 999,
-              description: "Classic pepperoni slices over mozzarella and tomato sauce.",
-            ),
-            Product(
-              name: "Fajita Pizza",
-              image: AppAssets.pizza,
-              price: 949,
-              description: "Spicy chicken fajita flavor on a cheesy crust.",
-            ),
+            Product(name: "Pepperoni Pizza", image: AppAssets.pizza, price: 999, description: "Classic pepperoni slices over mozzarella and tomato sauce."),
+            Product(name: "Fajita Pizza", image: AppAssets.pizza, price: 949, description: "Spicy chicken fajita flavor on a cheesy crust."),
           ],
         ),
         Section(
           title: "Large Pizzas",
           products: [
-            Product(
-              name: "Chicken Supreme",
-              image: AppAssets.pizza,
-              price: 1399,
-              description: "Loaded with grilled chicken, veggies, and extra cheese.",
-            ),
+            Product(name: "Chicken Supreme", image: AppAssets.pizza, price: 1399, description: "Loaded with grilled chicken, veggies, and extra cheese."),
           ],
         ),
-      ], id: 'pizza_mannia',
+      ],
     ),
-
   ].obs;
+
+  Restaurant? getRestaurantById(String id) {
+    try {
+      return restaurants.firstWhere((r) => r.id == id);
+    } catch (_) {
+      return null;
+    }
+  }
+
 }

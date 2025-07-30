@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../models/restaurant_model.dart';
+import '../../../routes/app_routes.dart';
 import '../../../theme/app_colors.dart';
 import '../../cart/controller/cart_controller.dart';
 import '../../cart/view/cart_screen.dart';
@@ -31,25 +32,36 @@ class RestaurantDetailScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         bottomNavigationBar: cartController.currentCart.isEmpty
             ? null
-            : InkWell(
-          onTap: () {
-            Get.to(() => CartScreen(restaurantId: restaurant.id));
-          },
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            decoration: BoxDecoration(
-              color: AppColors.primary,
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20),
+            : Container(
+          padding: const EdgeInsets.all(16),
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                blurRadius: 8,
+                color: AppColors.border,
+              ),
+            ],
+          ),
+          child: ElevatedButton(
+            onPressed: () {
+              Get.toNamed(AppRoutes.cart, arguments: {
+                'restaurantId': restaurant.id,
+              });
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
+              minimumSize: const Size(double.infinity, 50),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
               ),
             ),
             child: Row(
               children: [
-                // Circle with count
+                // Item count circle
                 Container(
-                  width: 30,
-                  height: 30,
+                  width: 25,
+                  height: 25,
                   decoration: const BoxDecoration(
                     color: Colors.white,
                     shape: BoxShape.circle,
@@ -57,17 +69,17 @@ class RestaurantDetailScreen extends StatelessWidget {
                   alignment: Alignment.center,
                   child: Text(
                     cartController.totalItems.toString(),
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: AppColors.primary,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
                 const SizedBox(width: 12),
-                // Cart info
+                // Texts
                 Expanded(
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       const Text(
@@ -79,10 +91,7 @@ class RestaurantDetailScreen extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        cartController.currentCart.keys
-                            .map((p) => p.name)
-                            .take(2)
-                            .join(' And '),
+                        restaurant.name,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
@@ -105,6 +114,8 @@ class RestaurantDetailScreen extends StatelessWidget {
             ),
           ),
         ),
+
+
 
 
         body: CustomScrollView(

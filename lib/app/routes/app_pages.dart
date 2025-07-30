@@ -5,6 +5,7 @@ import 'package:bhooklagiapp/app/modules/auth/views/mobile_verification_screen.d
 import 'package:bhooklagiapp/app/modules/restaurant_deatil/view/restaurant_deatil_screen.dart';
 import 'package:get/get.dart';
 
+import '../bindings/Checkount_binding.dart';
 import '../bindings/auth_binding.dart';
 import '../bindings/cart_binding.dart';
 import '../bindings/favorite_binding.dart';
@@ -17,6 +18,7 @@ import '../modules/auth/views/code_verification_screen.dart';
 import '../modules/auth/views/login_screen.dart';
 import '../modules/auth/views/reset_password_screen.dart';
 import '../modules/cart/view/cart_screen.dart';
+import '../modules/checkout/view/checkout_screen.dart';
 import '../modules/favourites/view/favourite_screen.dart' hide CartScreen;
 import '../modules/grocery/view/grosery_screen.dart';
 import '../modules/home/controllers/home_controller.dart';
@@ -96,9 +98,18 @@ class AppPages {
 
     GetPage(
       name: AppRoutes.cart,
-      page: () =>  CartScreen(restaurantId: '',),
+      page: () {
+        final args = Get.arguments;
+        final restaurantId = args is String
+            ? args
+            : (args is Map<String, dynamic> ? args['restaurantId'] ?? '' : '');
+        return CartScreen(restaurantId: restaurantId);
+      },
       binding: CartBinding(),
     ),
+
+
+
 
     GetPage(
       name: AppRoutes.favorite,
@@ -110,6 +121,12 @@ class AppPages {
       name: AppRoutes.grocery,
       page: () => GroceryScreen(),
       binding: GroceryBinding(),
+    ),
+
+    GetPage(
+      name: AppRoutes.checkout,
+      page: () => CheckOutScreen(),
+      binding: CheckoutBinding(),
     ),
   ];
 }
