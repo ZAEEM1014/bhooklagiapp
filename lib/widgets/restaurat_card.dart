@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../app/models/restaurant_model.dart';
@@ -110,13 +111,21 @@ class _RestaurantCardState extends State<RestaurantCard>
           children: [
             Stack(
               children: [
-                Image.asset(
-                  widget.restaurant.image,
+
+
+
+
+
+                CachedNetworkImage(
+                  imageUrl: widget.restaurant.image,
                   height: 180,
                   width: double.infinity,
                   fit: BoxFit.cover,
+
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
                 ),
-                Positioned(
+
+            Positioned(
                   top: 7,
                   right: 7,
                   child: Obx(() {

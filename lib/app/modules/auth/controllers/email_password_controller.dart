@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:bhooklagiapp/app/theme/theme.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../routes/app_routes.dart';
 import '../../../theme/app_colors.dart';
 import '../views/email_password_screen.dart';
@@ -27,10 +28,17 @@ class EmailPasswordController extends GetxController {
     isPasswordVisible.value = !isPasswordVisible.value;
   }
 
-  void loginWithPassword() {
+  void loginWithPassword() async {
+    final prefs = await SharedPreferences.getInstance();
+    final hasSeenIntro = prefs.getBool('seenLocationIntro') ?? false;
 
-    Get.toNamed(AppRoutes.mainwrapper, );
+    if (!hasSeenIntro) {
+      Get.offAllNamed(AppRoutes.locationPermission);
+    } else {
+      Get.offAllNamed(AppRoutes.mainwrapper);
+    }
   }
+
 
   void forgotPasswordFlow() {
     Get.bottomSheet(

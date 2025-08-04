@@ -1,4 +1,5 @@
 import 'package:bhooklagiapp/widgets/custom_navBar.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -99,12 +100,14 @@ class HomeScreen extends StatelessWidget {
                               children: [
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(12),
-                                  child: Image.asset(
-                                    category.imagePath,
+                                  child:CachedNetworkImage(
+                                    imageUrl: category.imagePath,
                                     width: 50,
                                     height: 50,
                                     fit: BoxFit.cover,
-                                  ),
+
+                                    errorWidget: (context, url, error) => Icon(Icons.broken_image),
+                                  )
                                 ),
                                 const SizedBox(height: 6),
                                 Text(category.name),

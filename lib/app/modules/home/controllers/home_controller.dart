@@ -28,7 +28,7 @@ class HomeController extends GetxController {
     CategoryModel(name: 'Biryani', imagePath: AppAssets.biryani),
     CategoryModel(name: 'Burgers', imagePath: AppAssets.burger),
     CategoryModel(name: 'Paratha', imagePath: AppAssets.paratha),
-    CategoryModel(name: 'Icecream', imagePath: AppAssets.icecream),
+    CategoryModel(name: 'Icecream', imagePath: AppAssets.iceCream),
     CategoryModel(name: 'Fries', imagePath: AppAssets.fries),
     CategoryModel(name: 'Desert', imagePath: AppAssets.desert),
     CategoryModel(name: 'Shakes', imagePath: AppAssets.shakes),

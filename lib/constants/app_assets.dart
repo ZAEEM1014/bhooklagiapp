@@ -3,6 +3,8 @@ class AppAssets{
 
 
   // Logos
+
+  static const String locationLogo = 'assets/logos/location_logo.png';
   static const String mainLogo = 'assets/logos/logo.png';
   static const String whiteLogo = 'assets/logos/whitelogo.png';
   static const String purpleLogo = 'assets/logos/purplelogo.png';
@@ -26,14 +28,29 @@ class AppAssets{
 
 
   // Images
-  static const String paratha = 'assets/images/paratha.jpg';
-  static const String pizza = 'assets/images/pizza.jpg';
-  static const String burger = 'assets/images/burger.jpg';
-  static const String biryani = 'assets/images/biryani.jpg';
-  static const String fries = 'assets/images/fries.jpg';
-  static const String icecream = 'assets/images/icecream.jpg';
-  static const String samosa = 'assets/images/samosa.jpg';
-  static const String shakes = 'assets/images/shakes.jpg';
-  static const String desert = 'assets/images/desert.jpg';
-  static const String banner = 'assets/images/banner.png';
+
+  static const String _baseCloudinary =
+      "https://res.cloudinary.com/dnisxyaon/image/upload";
+  static const String _transformParams =
+      "w_400,q_auto:low,f_auto,c_limit";
+
+  // Category Images
+  static const String burger =
+      "$_baseCloudinary/$_transformParams/v1754300702/burger_zqfrm3.jpg";
+  static const String fries =
+      "$_baseCloudinary/$_transformParams/v1754300703/fries_l70j3l.jpg";
+  static const String samosa =
+      "$_baseCloudinary/$_transformParams/v1754300701/samosa_gczzpy.jpg";
+  static const String biryani =
+      "$_baseCloudinary/$_transformParams/v1754300702/biryani_dtoyyh.jpg";
+  static const String iceCream =
+      "$_baseCloudinary/$_transformParams/v1754300702/icecream_t5co2u.jpg";
+  static const String shakes =
+      "$_baseCloudinary/$_transformParams/v1754300701/shakes_sneidf.jpg";
+  static const String desert =
+      "$_baseCloudinary/$_transformParams/v1754300702/desert_kogcuh.jpg";
+  static const String pizza =
+      "$_baseCloudinary/$_transformParams/v1754300701/pizza_nyqrhy.jpg";
+  static const String paratha =
+      "$_baseCloudinary/$_transformParams/v1754300701/paratha_ikq7fh.jpg";
 }

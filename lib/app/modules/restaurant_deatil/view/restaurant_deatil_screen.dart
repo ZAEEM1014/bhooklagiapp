@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../models/restaurant_model.dart';
@@ -10,121 +11,114 @@ class RestaurantDetailScreen extends StatelessWidget {
   final Restaurant restaurant;
   final favoriteController = Get.find<FavoriteController>();
 
-
-
   RestaurantDetailScreen({super.key, required this.restaurant});
   final CartController cartController = Get.find<CartController>();
 
-
-
   @override
-
   Widget build(BuildContext context) {
     cartController.currentRestaurantId = restaurant.id;
     return Obx(() {
       final currentCartItems = cartController.currentCart.entries.toList();
       final totalAmount = currentCartItems.fold<double>(
         0.0,
-            (sum, item) => sum + item.key.price * item.value,
+        (sum, item) => sum + item.key.price * item.value,
       );
       return Scaffold(
         backgroundColor: Colors.white,
         bottomNavigationBar: cartController.currentCart.isEmpty
             ? null
             : Container(
-          padding: const EdgeInsets.all(16),
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                blurRadius: 8,
-                color: AppColors.border,
-              ),
-            ],
-          ),
-          child: ElevatedButton(
-            onPressed: () {
-              Get.to(() => CartScreen(restaurantId: restaurant.id));
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary,
-              minimumSize: const Size(double.infinity, 55),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-            child: Row(
-              children: [
-                // Item count circle
-                Container(
-                  width: 25,
-                  height: 25,
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                  ),
-                  alignment: Alignment.center,
-                  child: Text(
-                    cartController.totalItems.toString(),
-                    style: const TextStyle(
-                      color: AppColors.primary,
-                      fontWeight: FontWeight.bold,
+                padding: const EdgeInsets.all(16),
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      blurRadius: 8,
+                      color: AppColors.border,
+                    ),
+                  ],
+                ),
+                child: ElevatedButton(
+                  onPressed: () {
+                    Get.to(() => CartScreen(restaurantId: restaurant.id));
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                    minimumSize: const Size(double.infinity, 55),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                ),
-                const SizedBox(width: 12),
-                // Texts
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
+                  child: Row(
                     children: [
-                      const Text(
-                        'View your cart',
-                        style: TextStyle(
+                      // Item count circle
+                      Container(
+                        width: 25,
+                        height: 25,
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                        ),
+                        alignment: Alignment.center,
+                        child: Text(
+                          cartController.totalItems.toString(),
+                          style: const TextStyle(
+                            color: AppColors.primary,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      // Texts
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Text(
+                              'View your cart',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
+                            Text(
+                              restaurant.name,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                color: Colors.white70,
+                                fontSize: 13,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Text(
+                        'Rs. ${cartController.totalPrice.toStringAsFixed(2)}',
+                        style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
                         ),
                       ),
-                      Text(
-                        restaurant.name,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          color: Colors.white70,
-                          fontSize: 13,
-                        ),
-                      ),
                     ],
                   ),
                 ),
-                Text(
-                  'Rs. ${cartController.totalPrice.toStringAsFixed(2)}',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-
-
-
-
+              ),
         body: CustomScrollView(
           slivers: [
             SliverToBoxAdapter(
-                child: _RestaurantHeader(restaurant: restaurant,favoriteController: favoriteController,)),
+                child: _RestaurantHeader(
+              restaurant: restaurant,
+              favoriteController: favoriteController,
+            )),
             // Gradient background behind the sticky search header
             SliverPersistentHeader(
               pinned: true,
               delegate: _StickyHeaderDelegate(
                 child: Container(
-
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: const BorderRadius.vertical(
@@ -174,15 +168,14 @@ class RestaurantDetailScreen extends StatelessWidget {
                         scrollDirection: Axis.horizontal,
                         child: Row(
                           children: restaurant.sections
-                              .map((section) =>
-                              Padding(
-                                padding: const EdgeInsets.only(right: 24),
-                                child: Text(
-                                  section.title,
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ))
+                              .map((section) => Padding(
+                                    padding: const EdgeInsets.only(right: 24),
+                                    child: Text(
+                                      section.title,
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ))
                               .toList(),
                         ),
                       ),
@@ -194,11 +187,11 @@ class RestaurantDetailScreen extends StatelessWidget {
 
             SliverList(
               delegate: SliverChildBuilderDelegate(
-                    (context, index) {
+                (context, index) {
                   final section = restaurant.sections[index];
                   return Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 12, vertical: 8),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     child: Material(
                       borderRadius: BorderRadius.circular(16),
                       elevation: 4,
@@ -227,8 +220,8 @@ class RestaurantDetailScreen extends StatelessWidget {
                             children: [
                               // 🔥 Section Title
                               Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 16),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 16),
                                 child: Text(
                                   "🔥 ${section.title}",
                                   style: const TextStyle(
@@ -243,11 +236,12 @@ class RestaurantDetailScreen extends StatelessWidget {
                               // 🧺 Product Grid
                               GridView.builder(
                                 itemCount: section.products.length,
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 16),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 16),
                                 shrinkWrap: true,
                                 physics: const NeverScrollableScrollPhysics(),
-                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                gridDelegate:
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
                                   crossAxisCount: 2,
                                   crossAxisSpacing: 12,
                                   mainAxisSpacing: 12,
@@ -256,26 +250,31 @@ class RestaurantDetailScreen extends StatelessWidget {
                                 itemBuilder: (_, index) {
                                   final product = section.products[index];
                                   return GestureDetector(
-                                    onTap: () =>
-                                        showProductDetailSheet(
-                                            context, product),
+                                    onTap: () => showProductDetailSheet(
+                                        context, product),
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment
-                                          .start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         // 📷 Product Image with Add button
                                         Stack(
                                           children: [
                                             ClipRRect(
-                                              borderRadius: BorderRadius
-                                                  .circular(14),
-                                              child: Image.asset(
-                                                product.image,
-                                                height: 140,
-                                                width: double.infinity,
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
+                                                borderRadius:
+                                                    BorderRadius.circular(14),
+                                                child: CachedNetworkImage(
+                                                  imageUrl: product.image,
+                                                  height: 140,
+                                                  width: double.infinity,
+                                                  fit: BoxFit.cover,
+                                                  placeholder: (context, url) =>
+                                                      const Center(
+                                                          child:
+                                                              CircularProgressIndicator()),
+                                                  errorWidget: (context, url,
+                                                          error) =>
+                                                      const Icon(Icons.error),
+                                                )),
                                             Positioned(
                                               bottom: 8,
                                               right: 8,
@@ -284,15 +283,15 @@ class RestaurantDetailScreen extends StatelessWidget {
                                                   shape: BoxShape.circle,
                                                   color: Colors.white,
                                                   border: Border.all(
-                                                      color: AppColors
-                                                          .textDark),
+                                                      color:
+                                                          AppColors.textDark),
                                                   boxShadow: [
                                                     BoxShadow(
                                                       color: Colors.black
                                                           .withOpacity(0.05),
                                                       blurRadius: 4,
-                                                      offset: const Offset(
-                                                          0, 2),
+                                                      offset:
+                                                          const Offset(0, 2),
                                                     ),
                                                   ],
                                                 ),
@@ -333,8 +332,7 @@ class RestaurantDetailScreen extends StatelessWidget {
                                           padding: const EdgeInsets.symmetric(
                                               horizontal: 8),
                                           child: Text(
-                                            "Rs. ${product.price
-                                                .toStringAsFixed(2)}",
+                                            "Rs. ${product.price.toStringAsFixed(2)}",
                                             style: const TextStyle(
                                               fontSize: 13,
                                               color: Colors.black87,
@@ -358,11 +356,9 @@ class RestaurantDetailScreen extends StatelessWidget {
                 childCount: restaurant.sections.length,
               ),
             )
-
           ],
         ),
       );
-
     });
   }
 }
@@ -371,7 +367,10 @@ class _RestaurantHeader extends StatelessWidget {
   final Restaurant restaurant;
   final FavoriteController favoriteController;
 
-  const _RestaurantHeader({required this.restaurant,    required this.favoriteController,});
+  const _RestaurantHeader({
+    required this.restaurant,
+    required this.favoriteController,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -390,20 +389,15 @@ class _RestaurantHeader extends StatelessWidget {
                   Get.back();
                 },
               ),
-
               Row(
                 children: [
                   const Icon(Icons.info_outline, size: 20),
                   const SizedBox(width: 5),
-
-
-
-
                   Obx(() {
-                    final isFav = favoriteController.isFavorite(restaurant.id );
+                    final isFav = favoriteController.isFavorite(restaurant.id);
                     return TweenAnimationBuilder<Color?>(
                       tween: ColorTween(
-                        begin: isFav ? AppColors.black: AppColors.primary,
+                        begin: isFav ? AppColors.black : AppColors.primary,
                         end: isFav ? AppColors.primary : AppColors.black,
                       ),
                       duration: const Duration(milliseconds: 300),
@@ -415,19 +409,12 @@ class _RestaurantHeader extends StatelessWidget {
                             size: 24,
                           ),
                           onPressed: () {
-                            favoriteController.toggleFavorite(restaurant.id );
+                            favoriteController.toggleFavorite(restaurant.id);
                           },
                         );
                       },
                     );
                   }),
-
-
-
-
-
-
-
                   const SizedBox(width: 5),
                   const Icon(Icons.share, size: 20),
                 ],
@@ -436,13 +423,14 @@ class _RestaurantHeader extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Center(
-            child: Container(
+            child:
+            Container(
               height: 72,
               width: 72,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
                 image: DecorationImage(
-                  image: AssetImage(restaurant.image),
+                  image: CachedNetworkImageProvider(restaurant.image),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -461,8 +449,8 @@ class _RestaurantHeader extends StatelessWidget {
             children: [
               ...List.generate(
                 5,
-                    (index) =>
-                const Icon(Icons.star, size: 14, color: Colors.orange),
+                (index) =>
+                    const Icon(Icons.star, size: 14, color: Colors.orange),
               ),
               const SizedBox(width: 4),
               Text(
@@ -515,7 +503,7 @@ class _RestaurantHeader extends StatelessWidget {
           Column(
             children: List.generate(
               (restaurant.offers.length / 2).ceil(),
-                  (rowIndex) {
+              (rowIndex) {
                 final start = rowIndex * 2;
                 final end = (start + 2) <= restaurant.offers.length
                     ? start + 2
@@ -532,7 +520,7 @@ class _RestaurantHeader extends StatelessWidget {
                         ? AppColors.primary.withOpacity(0.08)
                         : Colors.white;
                     final iconColor =
-                    isFirst ? AppColors.primary : Colors.deepPurple;
+                        isFirst ? AppColors.primary : Colors.deepPurple;
 
                     final offerCard = Container(
                       margin: const EdgeInsets.only(right: 8, bottom: 8),
@@ -595,7 +583,7 @@ class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
 
   @override
   Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) =>
+          BuildContext context, double shrinkOffset, bool overlapsContent) =>
       child;
 
   @override
@@ -608,8 +596,8 @@ class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
   bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
       true;
 }
-void showProductDetailSheet(BuildContext context, Product product) {
 
+void showProductDetailSheet(BuildContext context, Product product) {
   final RxInt quantity = 1.obs;
 
   showModalBottomSheet(
@@ -634,31 +622,41 @@ void showProductDetailSheet(BuildContext context, Product product) {
                 // 🖼️ Product Image
                 ClipRRect(
                   borderRadius: BorderRadius.circular(12),
-                  child:  Image.asset(
-                    product.image,
+                  child: CachedNetworkImage(
+                    imageUrl: product.image,
                     height: 250,
                     width: double.infinity,
                     fit: BoxFit.cover,
-                  ),
+                    placeholder: (context, url) => const SizedBox(
+                      height: 250,
+                      child: Center(child: CircularProgressIndicator()),
+                    ),
+                    errorWidget: (context, url, error) => const Icon(Icons.broken_image),
+                  )
                 ),
                 const SizedBox(height: 16),
 
                 // 🧁 Name & Price
                 Align(
                   alignment: Alignment.centerLeft,
-                  child: Text(product.name, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  child: Text(product.name,
+                      style: const TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.bold)),
                 ),
                 const SizedBox(height: 8),
                 Align(
                   alignment: Alignment.centerLeft,
-                  child: Text("Rs. ${product.price.toStringAsFixed(0)}", style: const TextStyle(fontSize: 16)),
+                  child: Text("Rs. ${product.price.toStringAsFixed(0)}",
+                      style: const TextStyle(fontSize: 16)),
                 ),
                 const SizedBox(height: 12),
 
                 // 📝 Description
                 Align(
                   alignment: Alignment.centerLeft,
-                  child: Text(product.description, style: const TextStyle(fontSize: 14, color: Colors.black54)),
+                  child: Text(product.description,
+                      style:
+                          const TextStyle(fontSize: 14, color: Colors.black54)),
                 ),
                 const SizedBox(height: 16),
 
@@ -667,36 +665,39 @@ void showProductDetailSheet(BuildContext context, Product product) {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Obx(() => Row(
-                      children: [
-                        _qtyButton(Icons.remove, () {
-                          if (quantity.value > 1) quantity.value--;
-                        }),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: Text(
-                            quantity.toString(),
-                            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                          ),
-                        ),
-                        _qtyButton(Icons.add, () {
-                          quantity.value++;
-                        }),
-                      ],
-                    )),
+                          children: [
+                            _qtyButton(Icons.remove, () {
+                              if (quantity.value > 1) quantity.value--;
+                            }),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16),
+                              child: Text(
+                                quantity.toString(),
+                                style: const TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                            _qtyButton(Icons.add, () {
+                              quantity.value++;
+                            }),
+                          ],
+                        )),
                     // ADD TO CART BUTTON
                     SizedBox(
                       height: 50,
                       width: 180,
-                      child:ElevatedButton(
+                      child: ElevatedButton(
                         onPressed: () {
                           final cartController = Get.find<CartController>();
                           cartController.addToCart(product, quantity.value);
                           Navigator.pop(context); // Close the bottom sheet
                         },
-                        style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
-                        child: const Text("Add to Cart", style: TextStyle(color: AppColors.white)),
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.primary),
+                        child: const Text("Add to Cart",
+                            style: TextStyle(color: AppColors.white)),
                       ),
-
                     ),
                   ],
                 ),
@@ -729,5 +730,3 @@ Widget _qtyButton(IconData icon, VoidCallback onTap) {
     ),
   );
 }
-
-
