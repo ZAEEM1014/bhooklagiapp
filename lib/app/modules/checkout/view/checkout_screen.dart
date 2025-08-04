@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../widgets/app_bar_normal.dart';
+import '../../../routes/app_routes.dart';
 import '../../../theme/app_colors.dart';
 import '../controller/checkout_controller.dart';
 import '../../cart/controller/cart_controller.dart';
+import '../controller/payment_method _controller.dart';
 
 
 class CheckOutScreen extends StatefulWidget {
@@ -116,7 +118,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () {
-                  controller.selectPaymentMethod();
+
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,
@@ -396,51 +398,70 @@ class _BouncyOptionState extends State<_BouncyOption>
 class PaymentMethodCard extends StatelessWidget {
   const PaymentMethodCard({super.key});
 
+  void _openSheet(BuildContext context) {
+    showPaymentMethodSheet(context);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 4,
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            "Payment method",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-              color: AppColors.textDark,
-            ),
-          ),
-          const SizedBox(height: 12),
-          GestureDetector(
-            onTap: () => showPaymentMethodSheet(context),
-            child: Row(
-              children: const [
-                Icon(Icons.add, color: Colors.black),
-                SizedBox(width: 8),
-                Text("Add a payment method"),
-              ],
-            ),
-          ),
+    final controller = Get.find<PaymentMethodController>();
 
-          const Divider(height: 24),
+    return Obx(() {
+      final hasMethod = controller.selectedMethod.value != PaymentType.none;
 
-        ],
-      ),
-    );
+      return Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 4)],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              "Payment method",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+                color: AppColors.textDark,
+              ),
+            ),
+            const SizedBox(height: 12),
+            if (hasMethod)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(
+                      controller.selectedDetails.value,
+                      style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () => _openSheet(context),
+                    child: const Text("Change"),
+                  ),
+                ],
+              )
+            else
+              GestureDetector(
+                onTap: () => _openSheet(context),
+                child: Row(
+                  children: const [
+                    Icon(Icons.add, color: Colors.black),
+                    SizedBox(width: 8),
+                    Text("Add a payment method"),
+                  ],
+                ),
+              ),
+            const Divider(height: 24),
+          ],
+        ),
+      );
+    });
   }
 }
-
 
 
 class OrderSummaryCard extends StatelessWidget {
@@ -542,6 +563,8 @@ class OrderSummaryCard extends StatelessWidget {
 
 
 void showPaymentMethodSheet(BuildContext context) {
+  final controller = Get.find<PaymentMethodController>();
+
   showModalBottomSheet(
     context: context,
     backgroundColor: Colors.white,
@@ -551,64 +574,109 @@ void showPaymentMethodSheet(BuildContext context) {
     builder: (context) {
       return Padding(
         padding: const EdgeInsets.all(16),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              "Select a payment method",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
+        child: Obx(() {
+          final selected = controller.selectedMethod.value;
+
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                "Select a payment method",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
               ),
-            ),
-            const SizedBox(height: 16),
+              const SizedBox(height: 16),
 
-            _paymentOptionTile("Cash", Icons.money, selected: true),
-            _paymentOptionTile("Credit or Debit Card", Icons.credit_card, badgeText: "Rs. 350.00 off"),
-            _paymentOptionTile("JazzCash", Icons.account_balance_wallet),
-            _paymentOptionTile("easypaisa", Icons.account_balance),
+              _paymentOptionTile(
+                title: "Cash",
+                icon: Icons.money,
+                selected: selected == PaymentType.cash,
+                onTap: () {
+                  controller.setMethod(PaymentType.cash, "Cash on Delivery");
+                  Get.back(); // close bottom sheet
+                },
+              ),
 
-            const SizedBox(height: 10),
+              _paymentOptionTile(
+                title: "Credit or Debit Card",
+                icon: Icons.credit_card,
+                badgeText: "Rs. 350.00 off",
+                selected: selected == PaymentType.creditCard,
+                onTap: () {
+                  controller.setMethod(PaymentType.creditCard, "Card");
+                  Get.back(); // close sheet first
+                  Get.toNamed(AppRoutes.addCard);
+                },
+              ),
 
-          ],
-        ),
+              _paymentOptionTile(
+                title: "JazzCash",
+                icon: Icons.account_balance_wallet,
+                selected: selected == PaymentType.jazzCash,
+                onTap: () {
+                  controller.setMethod(PaymentType.jazzCash, "JazzCash");
+                  Get.back();
+                  Get.toNamed(AppRoutes.jazzCash);
+                },
+              ),
+
+
+
+              const SizedBox(height: 10),
+            ],
+          );
+        }),
       );
     },
   );
 }
 
-Widget _paymentOptionTile(String title, IconData icon, {bool selected = false, String? badgeText}) {
+Widget _paymentOptionTile({
+  required String title,
+  required IconData icon,
+  bool selected = false,
+  String? badgeText,
+  required VoidCallback onTap,
+}) {
   return ListTile(
-    leading: Icon(icon),
-    title: Text(title),
+    leading: Icon(icon, color: selected ? AppColors.primary : Colors.black),
+    title: Text(
+      title,
+      style: TextStyle(
+        fontWeight: FontWeight.w500,
+        color: selected ? AppColors.primary : Colors.black,
+      ),
+    ),
     trailing: Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-
-
-
+        if (badgeText != null)
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: AppColors.primary.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Text(
+              badgeText,
+              style: const TextStyle(
+                fontSize: 12,
+                color: AppColors.primary,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        const SizedBox(width: 8),
         Icon(
-          Icons.arrow_forward_ios ,
-          color: AppColors.border,
+          selected ? Icons.check_circle : Icons.arrow_forward_ios,
+          color: selected ? AppColors.primary : AppColors.border,
+          size: selected ? 20 : 16,
         ),
       ],
     ),
-    onTap: () {
-      // You can handle selection logic here
-    },
+    onTap: onTap,
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

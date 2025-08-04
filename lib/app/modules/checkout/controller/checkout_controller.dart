@@ -1,7 +1,8 @@
-import 'package:flutter/cupertino.dart';
+import 'package:bhooklagiapp/app/modules/checkout/controller/payment_method%20_controller.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../view/checkout_screen.dart';
+
 
 class CheckoutController extends GetxController {
   // Observable values
@@ -18,29 +19,40 @@ class CheckoutController extends GetxController {
   // Platform fee
   final _platformFee = 19.99.obs;
 
+  // Payment method controller (safe initialization)
+  late final PaymentMethodController paymentMethodController;
+
+  @override
+  void onInit() {
+    // Safely register or find the PaymentMethodController
+    if (!Get.isRegistered<PaymentMethodController>()) {
+      Get.put(PaymentMethodController());
+    }
+    paymentMethodController = Get.find<PaymentMethodController>();
+
+    super.onInit();
+  }
+
   // Getters
   double get deliveryFee => _deliveryFee.value;
   double get platformFee => _platformFee.value;
   double get discount => subtotal.value * 0.10;
 
   double get originalTotal => subtotal.value + deliveryFee + platformFee;
-  double get total => originalTotal ;
+  double get total => originalTotal;
 
   // Actions
   void selectDeliveryOption(String option) {
     selectedDelivery.value = option;
-    _deliveryFee.value = (option == 'Priority')
-        ? _baseDeliveryFee + _priorityExtraFee
-        : _baseDeliveryFee;
+    _deliveryFee.value =
+    (option == 'Priority') ? _baseDeliveryFee + _priorityExtraFee : _baseDeliveryFee;
   }
 
   void toggleTopUpWallet(bool value) => topUpWallet.value = value;
-
   void toggleLeaveAtDoor(bool value) => leaveAtDoor.value = value;
 
   void selectPaymentMethod() {
-    print('Select payment method pressed');
-    // Add your Get.toNamed() logic here
+    openPaymentMethodSelector(Get.context!);
   }
 
   void openPaymentMethodSelector(BuildContext context) {
@@ -48,7 +60,17 @@ class CheckoutController extends GetxController {
   }
 
   void placeOrder() {
-    print('Place order logic here');
-    // Add API/logic to handle order placement
+    if (paymentMethodController.selectedMethod.value == PaymentType.none) {
+      Get.snackbar("Payment Required", "Please select a payment method before placing the order");
+      return;
+    }
+
+    // Simulate placing an order
+    print('--- Order Summary ---');
+    print('Subtotal: $subtotal');
+    print('Delivery Fee: $deliveryFee');
+    print('Platform Fee: $platformFee');
+    print('Payment Method: ${paymentMethodController.selectedMethod.value}');
+    print('Payment Detail: ${paymentMethodController.selectedDetails.value}');
   }
 }

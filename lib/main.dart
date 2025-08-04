@@ -6,6 +6,7 @@ import 'package:firebase_core/firebase_core.dart';
 
 import 'app/modules/auth/controllers/auth_controller.dart';
 import 'app/modules/cart/controller/cart_controller.dart';
+import 'app/modules/checkout/controller/payment_method _controller.dart';
 import 'app/modules/favourites/controller/favourite_countroller.dart';
 import 'app/theme/theme.dart';
 import 'app/routes/app_pages.dart';
@@ -19,6 +20,7 @@ void main() async {
   Get.put(BottomNavController());
   Get.put(CartController());
   Get.put(FavoriteController());
+  Get.put(PaymentMethodController());
 
   runApp(const BhookhLagiApp());
 }
