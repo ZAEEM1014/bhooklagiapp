@@ -2,16 +2,16 @@ import 'package:bhooklagiapp/constants/app_assets.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../widgets/app_button.dart';
+import '../controller/location-controller.dart'; // ✅ Make sure the controller here is the unified LocationController
 import '../../../routes/app_routes.dart';
 import '../../../theme/app_colors.dart';
-import '../controller/location_permission_controller.dart';
 
 class LocationPermissionScreen extends StatelessWidget {
   const LocationPermissionScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<LocationPermissionController>();
+    final locationController = Get.find<LocationController>();
 
     return Scaffold(
       backgroundColor: AppColors.white,
@@ -54,9 +54,11 @@ class LocationPermissionScreen extends StatelessWidget {
               padding: const EdgeInsets.all(24.0),
               child: AppButton(
                 text: "Continue",
-                onPressed: controller.continueToLocationSelection,
+                onPressed: () async {
+                  await locationController.fetchCurrentLocation();
+                  Get.offAllNamed(AppRoutes.mainwrapper);
+                },
               ),
-
             ),
           ],
         ),

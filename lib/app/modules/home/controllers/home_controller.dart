@@ -4,13 +4,13 @@ import 'package:get/get.dart';
 import '../../../models/category_model.dart';
 
 class HomeController extends GetxController {
-  var location = '15 A Chenab Gate Road'.obs;
+
+
+  var location = '15 A Chenab Gate Road'.obs; // ✅ define location observable
   var showIntro = true.obs;
   var showSearchBar = true.obs;
 
-  /// 👇 This is used by each RestaurantCard to know current scroll position
   final RxDouble scrollOffset = 0.0.obs;
-
   final ScrollController scrollController = ScrollController();
 
   final double scrollThresholdForIntro = 100;
@@ -45,8 +45,6 @@ class HomeController extends GetxController {
 
   void _scrollListener() {
     final offset = scrollController.offset;
-
-    /// ✅ This is critical for card fade animation logic
     scrollOffset.value = offset;
 
     if (offset > scrollThresholdForIntro && showIntro.value) {

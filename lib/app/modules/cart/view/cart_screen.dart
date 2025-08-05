@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../widgets/app_bar_normal.dart';
@@ -52,11 +53,13 @@ class CartScreen extends StatelessWidget {
                       children: [
                         ClipRRect(
                           borderRadius: BorderRadius.circular(10),
-                          child: Image.asset(
-                            product.image,
+                          child:
+                          CachedNetworkImage(
+                            imageUrl: product.image,
                             width: 60,
                             height: 60,
                             fit: BoxFit.cover,
+                            errorWidget: (context, url, error) => const Icon(Icons.error),
                           ),
                         ),
                         const SizedBox(width: 12),

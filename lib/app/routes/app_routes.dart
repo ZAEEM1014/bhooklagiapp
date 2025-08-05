@@ -18,6 +18,7 @@ abstract class AppRoutes {
   static const addCard = '/add-card';
   static const jazzCash = '/jazzcash-payment';
   static const locationPermission = '/location-permission';
+  static const addLocation = '/add-location';
 
 
 }

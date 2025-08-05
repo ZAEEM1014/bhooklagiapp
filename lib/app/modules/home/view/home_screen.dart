@@ -9,14 +9,20 @@ import '../../../../widgets/home_sliver_appbar.dart';
 import '../../../../widgets/restaurat_card.dart';
 import '../../../theme/app_colors.dart';
 import '../../../theme/scroll_behavior.dart';
+import '../../location/controller/location-controller.dart';
 import '../../restaurant_deatil/view/restaurant_deatil_screen.dart';
 import '../controllers/home_controller.dart';
 
 class HomeScreen extends StatelessWidget {
   final controller = Get.put(HomeController());
   final restaurantController = Get.put(RestaurantController());
+  final LocationController locationController = Get.find<LocationController>();
+
 
   @override
+
+
+
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.primary,
@@ -165,7 +171,9 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
     );
+
   }
+
 }
 
 class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
@@ -185,3 +193,4 @@ class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
   @override
   bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) => true;
 }
+

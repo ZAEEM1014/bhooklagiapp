@@ -13,7 +13,8 @@ import '../bindings/cart_binding.dart';
 import '../bindings/favorite_binding.dart';
 import '../bindings/grocery_binding.dart';
 import '../bindings/jazzcash_binding.dart';
-import '../bindings/locationpermission_binding.dart';
+import '../bindings/location_binding.dart';
+
 import '../bindings/navbar_binding.dart';
 import '../bindings/restaurant_detai_binding.dart';
 import '../models/restaurant_model.dart';
@@ -30,6 +31,7 @@ import '../modules/favourites/view/favourite_screen.dart' hide CartScreen;
 import '../modules/grocery/view/grosery_screen.dart';
 import '../modules/home/controllers/home_controller.dart';
 import '../modules/home/view/home_screen.dart';
+import '../modules/location/view/add_new_location_screen.dart';
 import '../modules/location/view/location_permission_screen.dart';
 import '../modules/main_wrappeer/view/main_wrapper.dart';
 import '../modules/splash/splash_bindings.dart';
@@ -146,7 +148,13 @@ class AppPages {
     GetPage(
       name: AppRoutes.locationPermission,
       page: () => const LocationPermissionScreen(),
-      binding: LocationPermissionBinding(),
+
+    ),
+
+    GetPage(
+      name: AppRoutes.addLocation,
+      page: () =>  AddLocationScreen(),
+      binding: LocationBinding(),
     ),
 
 

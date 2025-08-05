@@ -29,15 +29,12 @@ class EmailPasswordController extends GetxController {
   }
 
   void loginWithPassword() async {
-    final prefs = await SharedPreferences.getInstance();
-    final hasSeenIntro = prefs.getBool('seenLocationIntro') ?? false;
-
-    if (!hasSeenIntro) {
-      Get.offAllNamed(AppRoutes.locationPermission);
-    } else {
-      Get.offAllNamed(AppRoutes.mainwrapper);
-    }
+    // Always navigate to Location Permission Screen after login
+    Get.offAllNamed(AppRoutes.locationPermission);
   }
+
+
+
 
 
   void forgotPasswordFlow() {

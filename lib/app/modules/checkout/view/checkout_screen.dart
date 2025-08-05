@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:get/get.dart';
 import '../../../../widgets/app_bar_normal.dart';
 import '../../../routes/app_routes.dart';
 import '../../../theme/app_colors.dart';
+import '../../location/controller/location-controller.dart';
 import '../controller/checkout_controller.dart';
 import '../../cart/controller/cart_controller.dart';
 import '../controller/payment_method _controller.dart';
 
-
 class CheckOutScreen extends StatefulWidget {
-  const CheckOutScreen({super.key});
+  CheckOutScreen({super.key});
+  final locationController = Get.find<LocationController>();
 
   @override
   State<CheckOutScreen> createState() => _CheckOutScreenState();
@@ -117,9 +119,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
               ),
               const SizedBox(height: 16),
               ElevatedButton(
-                onPressed: () {
-
-                },
+                onPressed: () {},
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,
                   minimumSize: const Size(double.infinity, 48),
@@ -142,13 +142,15 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
       }),
     );
   }
+
   Widget row(String label, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: const TextStyle(fontSize: 14, color: AppColors.textDark)),
+          Text(label,
+              style: const TextStyle(fontSize: 14, color: AppColors.textDark)),
           Text(value, style: const TextStyle(color: AppColors.textDark)),
         ],
       ),
@@ -156,13 +158,9 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
   }
 }
 
-
-
-
-
-
 class DeliveryAddressCard extends StatelessWidget {
   final CheckoutController controller = Get.find<CheckoutController>();
+  final locationController = Get.put(LocationController());
 
   DeliveryAddressCard({super.key});
 
@@ -200,35 +198,93 @@ class DeliveryAddressCard extends StatelessWidget {
           const SizedBox(height: 12),
 
           /// Map Image (static)
-          ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: Image.asset(
-              "assets/map_sample.png", // You can replace this with a real map widget if needed
-              height: 120,
-              width: double.infinity,
-              fit: BoxFit.cover,
-            ),
-          ),
+          Obx(() => Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child: SizedBox(
+                      height: 200,
+                      width: double.infinity,
+                      child: FlutterMap(
+                        options: MapOptions(
+                          center: locationController.selectedPoint.value,
+                          zoom: 13.0,
+                          interactiveFlags:
+                              InteractiveFlag.pinchZoom | InteractiveFlag.drag,
+                        ),
+                        children: [
+                          TileLayer(
+                            urlTemplate:
+                                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                            userAgentPackageName: 'com.example.yourapp',
+                          ),
+                          MarkerLayer(
+                            markers: [
+                              Marker(
+                                width: 40,
+                                height: 40,
+                                point: locationController.selectedPoint.value,
+                                child: const Icon(
+                                  Icons.location_on,
+                                  size: 40,
+                                  color: Colors.red,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                    child: Obx(() {
+                      final parts =
+                          locationController.location.value.split(',');
+                      final firstLine = parts.length > 1
+                          ? '${parts.first.trim()}, ${parts[1].trim()}'
+                          : locationController.location.value;
+                      final city = parts.length > 2 ? parts[2].trim() : '';
 
-          const SizedBox(height: 12),
-
-          /// Address Text
-          const Text(
-            "15 A Chenab Gate Road",
-            style: TextStyle(
-              fontWeight: FontWeight.w600,
-              fontSize: 15,
-              color: AppColors.textDark,
-            ),
-          ),
-          const SizedBox(height: 4),
-          const Text(
-            "Gujranwala",
-            style: TextStyle(
-              fontSize: 14,
-              color: AppColors.textDark,
-            ),
-          ),
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Current Location',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            firstLine,
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          ),
+                          if (city.isNotEmpty)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 2),
+                              child: Text(
+                                city,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.copyWith(
+                                      color: Colors.grey[600],
+                                    ),
+                              ),
+                            ),
+                        ],
+                      );
+                    }),
+                  ),
+                ],
+              )),
 
           const SizedBox(height: 16),
 
@@ -239,7 +295,8 @@ class DeliveryAddressCard extends StatelessWidget {
               hintStyle: TextStyle(color: AppColors.hintText),
               filled: true,
               fillColor: AppColors.background,
-              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
                 borderSide: BorderSide(color: AppColors.border),
@@ -250,12 +307,12 @@ class DeliveryAddressCard extends StatelessWidget {
           const SizedBox(height: 16),
 
           /// Leave at the door toggle
-
         ],
       ),
     );
   }
 }
+
 class DeliveryOptionsCard extends StatelessWidget {
   final CheckoutController controller = Get.find<CheckoutController>();
 
@@ -264,7 +321,7 @@ class DeliveryOptionsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Obx(
-          () => Container(
+      () => Container(
         margin: const EdgeInsets.only(bottom: 16),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
@@ -435,7 +492,8 @@ class PaymentMethodCard extends StatelessWidget {
                   Expanded(
                     child: Text(
                       controller.selectedDetails.value,
-                      style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+                      style: const TextStyle(
+                          fontSize: 15, fontWeight: FontWeight.w500),
                     ),
                   ),
                   TextButton(
@@ -462,7 +520,6 @@ class PaymentMethodCard extends StatelessWidget {
     });
   }
 }
-
 
 class OrderSummaryCard extends StatelessWidget {
   final CartController cartController = Get.find<CartController>();
@@ -495,7 +552,8 @@ class OrderSummaryCard extends StatelessWidget {
                 Icon(Icons.receipt_long, color: Colors.black87),
                 SizedBox(width: 8),
                 Text("Order summary",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
               ],
             ),
             const SizedBox(height: 12),
@@ -508,7 +566,8 @@ class OrderSummaryCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(child: Text('$quantity x ${product.name}')),
-                    Text('Rs. ${(product.price * quantity).toStringAsFixed(2)}'),
+                    Text(
+                        'Rs. ${(product.price * quantity).toStringAsFixed(2)}'),
                   ],
                 ),
               );
@@ -517,8 +576,10 @@ class OrderSummaryCard extends StatelessWidget {
             _buildSummaryRow("Subtotal", 'Rs. ${subtotal.toStringAsFixed(2)}'),
             _buildSummaryRow("Discount", '- Rs. ${discount.toStringAsFixed(2)}',
                 valueColor: AppColors.primary),
-            _buildSummaryRow("Delivery Fee", 'Rs. ${deliveryFee.toStringAsFixed(2)}'),
-            _buildSummaryRow("Platform Fee", 'Rs. ${platformFee.toStringAsFixed(2)}'),
+            _buildSummaryRow(
+                "Delivery Fee", 'Rs. ${deliveryFee.toStringAsFixed(2)}'),
+            _buildSummaryRow(
+                "Platform Fee", 'Rs. ${platformFee.toStringAsFixed(2)}'),
             const Divider(height: 24, thickness: 1),
             _buildSummaryRow("Total", 'Rs. ${total.toStringAsFixed(2)}',
                 valueColor: Colors.black),
@@ -561,7 +622,6 @@ class OrderSummaryCard extends StatelessWidget {
   }
 }
 
-
 void showPaymentMethodSheet(BuildContext context) {
   final controller = Get.find<PaymentMethodController>();
 
@@ -589,7 +649,6 @@ void showPaymentMethodSheet(BuildContext context) {
                 ),
               ),
               const SizedBox(height: 16),
-
               _paymentOptionTile(
                 title: "Cash",
                 icon: Icons.money,
@@ -599,7 +658,6 @@ void showPaymentMethodSheet(BuildContext context) {
                   Get.back(); // close bottom sheet
                 },
               ),
-
               _paymentOptionTile(
                 title: "Credit or Debit Card",
                 icon: Icons.credit_card,
@@ -611,7 +669,6 @@ void showPaymentMethodSheet(BuildContext context) {
                   Get.toNamed(AppRoutes.addCard);
                 },
               ),
-
               _paymentOptionTile(
                 title: "JazzCash",
                 icon: Icons.account_balance_wallet,
@@ -622,9 +679,6 @@ void showPaymentMethodSheet(BuildContext context) {
                   Get.toNamed(AppRoutes.jazzCash);
                 },
               ),
-
-
-
               const SizedBox(height: 10),
             ],
           );

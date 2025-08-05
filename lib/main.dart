@@ -8,6 +8,7 @@ import 'app/modules/auth/controllers/auth_controller.dart';
 import 'app/modules/cart/controller/cart_controller.dart';
 import 'app/modules/checkout/controller/payment_method _controller.dart';
 import 'app/modules/favourites/controller/favourite_countroller.dart';
+import 'app/modules/location/controller/location-controller.dart';
 import 'app/theme/theme.dart';
 import 'app/routes/app_pages.dart';
 import 'app/routes/app_routes.dart';
@@ -15,6 +16,7 @@ import 'app/routes/app_routes.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  Get.put(LocationController());
 
   Get.put(AuthController());
   Get.put(BottomNavController());
