@@ -2,7 +2,7 @@
 
 import 'package:bhooklagiapp/app/modules/Account/view/profile_screen.dart';
 import 'package:bhooklagiapp/app/modules/home/view/home_screen.dart';
-import 'package:bhooklagiapp/app/modules/search/search_screen.dart';
+import 'package:bhooklagiapp/app/modules/search/view/search_screen.dart';
 import 'package:get/get.dart';
 
 import '../../app/modules/grocery/view/grosery_screen.dart';

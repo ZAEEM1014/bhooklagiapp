@@ -1,4 +1,5 @@
 import 'package:bhooklagiapp/widgets/controller/nav_bar_controller.dart';
+import 'package:bhooklagiapp/widgets/controller/restaurant_card_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -23,6 +24,7 @@ void main() async {
   Get.put(CartController());
   Get.put(FavoriteController());
   Get.put(PaymentMethodController());
+  Get.put(RestaurantController());
 
   runApp(const BhookhLagiApp());
 }

@@ -16,6 +16,7 @@ import '../bindings/jazzcash_binding.dart';
 import '../bindings/location_binding.dart';
 
 import '../bindings/navbar_binding.dart';
+import '../bindings/order_success_binding.dart';
 import '../bindings/restaurant_detai_binding.dart';
 import '../models/restaurant_model.dart';
 import '../modules/auth/controllers/auth_controller.dart';
@@ -27,6 +28,7 @@ import '../modules/checkout/view/add_card_screen.dart';
 import '../modules/checkout/view/checkout_screen.dart';
 
 import '../modules/checkout/view/jazzcash_payment_screen.dart';
+import '../modules/checkout/view/order_success_screen.dart';
 import '../modules/favourites/view/favourite_screen.dart' hide CartScreen;
 import '../modules/grocery/view/grosery_screen.dart';
 import '../modules/home/controllers/home_controller.dart';
@@ -155,6 +157,12 @@ class AppPages {
       name: AppRoutes.addLocation,
       page: () =>  AddLocationScreen(),
       binding: LocationBinding(),
+    ),
+
+    GetPage(
+      name: AppRoutes.orderSuccess,
+      page: () =>  OrderSuccessScreen(),
+      binding: OrderSuccessBinding(),
     ),
 
 

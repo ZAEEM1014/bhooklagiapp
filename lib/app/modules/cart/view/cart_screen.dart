@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../widgets/app_bar_normal.dart';
+import '../../../../widgets/controller/restaurant_card_controller.dart';
 import '../../../theme/app_colors.dart';
 import '../controller/cart_controller.dart';
 
@@ -26,93 +27,176 @@ class CartScreen extends StatelessWidget {
         title: 'Your Cart',
         subtitle: restaurantName,
       ),
-      body: Obx(() {
-        final items = controller.currentCart;
+      body: Column(
+        children: [
+          // 🔹 Restaurant Switcher
+          // Inside your CartScreen build method
+      Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Obx(() {
+        // ✅ Only keep restaurants that have items in cart
+        final nonEmptyRestaurantIds = controller.restaurantCarts.entries
+            .where((entry) => entry.value.isNotEmpty)
+            .map((entry) => entry.key)
+            .toList();
 
-        if (items.isEmpty) {
-          return const Center(child: Text("Your cart is empty"));
+        final restaurantCount = nonEmptyRestaurantIds.length;
+
+        // Hide dropdown if no restaurants
+        if (restaurantCount == 0) {
+          controller.currentRestaurantId = null; // Reset selection
+          return const SizedBox();
         }
 
-        return ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            ...items.entries.map((entry) {
-              final product = entry.key;
-              final qty = entry.value;
+        final restaurantController = Get.find<RestaurantController>();
 
-              return Stack(
+        // If current selection is removed from cart, reset to first
+        if (controller.currentRestaurantId != null &&
+            !nonEmptyRestaurantIds.contains(controller.currentRestaurantId)) {
+          controller.currentRestaurantId = nonEmptyRestaurantIds.first;
+        }
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "You have $restaurantCount ${restaurantCount > 1 ? 'restaurants' : 'restaurant'} in cart",
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+            ),
+            const SizedBox(height: 8),
+            DropdownButtonFormField<String>(
+              isExpanded: true,
+              value: controller.currentRestaurantId,
+              decoration: InputDecoration(
+                labelText: "Select Restaurant ($restaurantCount)",
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                contentPadding:
+                const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              ),
+              items: nonEmptyRestaurantIds.map((id) {
+                final restaurant = restaurantController.getRestaurantById(id);
+                final name = restaurant?.name ?? "Restaurant $id";
+                return DropdownMenuItem(
+                  value: id,
+                  child: Text(
+                    name,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                );
+              }).toList(),
+              onChanged: (value) {
+                if (value != null) {
+                  controller.setCurrentRestaurant(value);
+                }
+              },
+            ),
+          ],
+        );
+      }),
+    ),
+
+
+
+
+    // 🔹 Cart Items
+          Expanded(
+            child: Obx(() {
+              final items = controller.currentCart;
+
+              if (items.isEmpty) {
+                return const Center(child: Text("Your cart is empty"));
+              }
+
+              return ListView(
+                padding: const EdgeInsets.all(16),
                 children: [
-                  Container(
-                    margin: const EdgeInsets.only(bottom: 16),
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Row(
+                  ...items.entries.map((entry) {
+                    final product = entry.key;
+                    final qty = entry.value;
+
+                    return Stack(
                       children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child:
-                          CachedNetworkImage(
-                            imageUrl: product.image,
-                            width: 60,
-                            height: 60,
-                            fit: BoxFit.cover,
-                            errorWidget: (context, url, error) => const Icon(Icons.error),
+                        Container(
+                          margin: const EdgeInsets.only(bottom: 16),
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          child: Row(
                             children: [
-                              Text(product.name,
-                                  style: const TextStyle(fontWeight: FontWeight.w600)),
-                              const SizedBox(height: 4),
-                              Text(
-                                product.description,
-                                style: const TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 12,
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: CachedNetworkImage(
+                                  imageUrl: product.image,
+                                  width: 60,
+                                  height: 60,
+                                  fit: BoxFit.cover,
+                                  errorWidget: (context, url, error) =>
+                                  const Icon(Icons.error),
                                 ),
                               ),
-                              const SizedBox(height: 8),
-                              Row(
-                                children: [
-                                  _qtyButton(Icons.remove, () => controller.decreaseQty(product)),
-                                  const SizedBox(width: 8),
-                                  Text('$qty', style: const TextStyle(fontSize: 16)),
-                                  const SizedBox(width: 8),
-                                  _qtyButton(Icons.add, () => controller.increaseQty(product)),
-                                  const Spacer(),
-                                  Text(
-                                    "Rs. ${(product.price * qty).toStringAsFixed(0)}",
-                                    style: const TextStyle(fontWeight: FontWeight.w600),
-                                  ),
-                                ],
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(product.name,
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.w600)),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      product.description,
+                                      style: const TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Row(
+                                      children: [
+                                        _qtyButton(Icons.remove,
+                                                () => controller.decreaseQty(product)),
+                                        const SizedBox(width: 8),
+                                        Text('$qty',
+                                            style:
+                                            const TextStyle(fontSize: 16)),
+                                        const SizedBox(width: 8),
+                                        _qtyButton(Icons.add,
+                                                () => controller.increaseQty(product)),
+                                        const Spacer(),
+                                        Text(
+                                          "Rs. ${(product.price * qty).toStringAsFixed(0)}",
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.w600),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
                           ),
                         ),
+                        Positioned(
+                          right: 8,
+                          top: 8,
+                          child: GestureDetector(
+                            onTap: () => controller.removeFromCart(product),
+                            child: const Icon(Icons.close,
+                                size: 20, color: Colors.grey),
+                          ),
+                        ),
                       ],
-                    ),
-                  ),
-                  Positioned(
-                    right: 8,
-                    top: 8,
-                    child: GestureDetector(
-                      onTap: () => controller.removeFromCart(product),
-                      child: const Icon(Icons.close, size: 20, color: Colors.grey),
-                    ),
-                  ),
+                    );
+                  }),
+                  const SizedBox(height: 100),
                 ],
               );
             }),
-            const SizedBox(height: 100),
-          ],
-        );
-      }),
+          ),
+        ],
+      ),
       bottomNavigationBar: Obx(() {
         if (controller.currentCart.isEmpty) return const SizedBox.shrink();
 
@@ -134,10 +218,12 @@ class CartScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text("Total:",
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                      style:
+                      TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                   Text(
                     "Rs. ${controller.totalPrice.toStringAsFixed(0)}",
-                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
@@ -147,7 +233,8 @@ class CartScreen extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,
                   minimumSize: const Size(double.infinity, 48),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)),
                 ),
                 child: const Text(
                   "Checkout",

@@ -119,7 +119,9 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
               ),
               const SizedBox(height: 16),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Get.offNamed(AppRoutes.orderSuccess);
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,
                   minimumSize: const Size(double.infinity, 48),
@@ -128,7 +130,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                   ),
                 ),
                 child: const Text(
-                  "Select payment method",
+                  " pay",
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,

@@ -9,7 +9,7 @@ class CustomBottomNavBar extends StatelessWidget {
 
   final List<Map<String, dynamic>> _navItems = const [
     {'icon': Icons.restaurant_menu, 'label': 'Food'},
-    {'icon': Icons.storefront, 'label': 'Grocery'},
+    {'icon': Icons.shopping_cart, 'label': 'Grocery'},
     {'icon': Icons.search, 'label': 'Search'},
     {'icon': Icons.person_outline, 'label': 'Account'},
   ];
